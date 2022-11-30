@@ -1,0 +1,136 @@
+body {
+    background-color: rgb(248, 247, 246);
+}
+
+.navbar-container {
+    height: 60px;
+    background-color: rgb(65, 37, 2);
+}
+
+.navbar-wrapper {
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wrapper-element {
+    flex: 1;
+}
+
+.navbar-wrapper-left {
+    padding: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.categories {
+    cursor: pointer;
+}
+
+.navbar-wrapper-center {
+    text-align: center;
+}
+
+.navbar-wrapper-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.navbar-wrapper-right > button {
+    background-color: #ffffff;
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    color: #111827;
+    font-family: "Inter var", ui-sans-serif, system-ui, -apple-system, system-ui,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    padding: 7px;
+    text-align: center;
+    text-decoration: none #d1d5db solid;
+    text-decoration-thickness: auto;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    transition: all 200ms;
+}
+
+.navbar-wrapper-right > button:hover {
+    background-color: rgb(249, 250, 251);
+    transform: scale(1.05);
+}
+
+/* .search-container {
+    background-color: white;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    width: 100%;
+} */
+
+/* .search-container-input {
+    border: none;
+    background-color: transparent;
+    color: white;
+} */
+
+/* .search-logo {
+    color: gray;
+    font-size: 16px;
+} */
+
+/* .logo {
+    font-weight: bold;
+} */
+
+.menu-item {
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+.search-form {
+    width: 80%;
+    height: 40px;
+    border-radius: 40px;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    background: #fff;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.search-form.focus {
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
+}
+
+.search-input {
+    font-size: 16px;
+    background: none;
+    color: #5a6674;
+    width: 100%;
+    height: 100%;
+    margin-left: 10px;
+    border: none;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+.search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}

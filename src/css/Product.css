@@ -1,0 +1,69 @@
+.product-container {
+    display: block;
+    align-items: center;
+    justify-content: center;
+}
+
+.icons-image-container {
+    flex: 1;
+    /* margin: 5px; */
+    max-width: 280px;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    /* background-color: #f9eedc; */
+}
+
+img {
+    height: 80%;
+    aspect-ratio: 3/4;
+    object-fit: contain;
+    z-index: 2;
+}
+
+.icons-container {
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 3;
+}
+
+.icons-container:hover {
+    cursor: pointer;
+    transition: all 0.5s ease;
+    opacity: 1;
+}
+
+.icon-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    color: rgb(104, 58, 1);
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-container:hover {
+    transition: all 0.5s ease;
+    background-color: rgb(204, 185, 163);
+    transform: scale(1.1);
+}
+
+.book-info-container {
+    display: block;
+    justify-content: stretch;
+    text-align: center;
+    /* align-items: center; */
+    /* margin: 10; */
+    font-size: larger;
+}
