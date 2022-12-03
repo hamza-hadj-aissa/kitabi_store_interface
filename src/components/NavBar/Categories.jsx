@@ -3,10 +3,12 @@ import { Component } from "react";
 class Categories extends Component {
     render() {
         return (
-            <select>
+            <select className="categories">
                 {this.props.categories.map((categorie) => {
                     return (
-                        <option value={categorie.name}>{categorie.name}</option>
+                        <option key={categorie.name} value={categorie.name}>
+                            {categorie.name}
+                        </option>
                     );
                 })}
             </select>
