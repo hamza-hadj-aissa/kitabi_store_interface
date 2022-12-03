@@ -1,24 +1,19 @@
 import { Badge } from "@material-ui/core";
-import { MenuOutlined, Search, ShoppingCartOutlined } from "@material-ui/icons";
-import React, { useState, useEffect } from "react";
+import {
+    MenuOutlined,
+    SearchOutlined,
+    ShoppingCartOutlined,
+} from "@material-ui/icons";
 import "../../css/NavBar.css";
 import Categories from "./Categories";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-const NavBar = () => {
-    // const [categories, setCategories] = useState([]);
-
-    // useEffect(() => {
-    //     fetch("http://localhost:8000/books/categories")
-    //         .then((response) => response.json())
-    //         .then((json) => {
-    //             // setCategories(json.categories);
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // }, [categories]);
-
+const NavBar = ({ setsearchValue, badgeState, searchValue }) => {
+    const Navigate = useNavigate();
+    const navigateToCart = () => {
+        Navigate("/cart");
+    };
     const categories = [
         { name: "Category 1" },
         { name: "Category 2" },
@@ -26,46 +21,60 @@ const NavBar = () => {
         { name: "Category 4" },
     ];
 
+    const [badgeNumber, setbadgeNumber] = useState(badgeState);
+    let value = "";
     return (
-        <div className="navbar-container">
-            <div className="navbar-wrapper">
-                <div className="navbar-wrapper-left wrapper-element">
-                    {/* <div className="left-item search-container"> */}
-                    {/* <input
-                            className="search-container-input"
-                            placeholder="Find a book"
-                        /> */}
-                    <form className="search-form">
-                        <input
-                            type="search"
-                            placeholder="Search a book, author, category"
-                            className="search-input"
-                        />
-                    </form>
-                    <Categories
-                        className="left-item menu-item categories"
-                        categories={categories}
+        <nav className="navbar-container">
+            <div className="navbar-wrapper-left wrapper-element">
+                <h1 className="logo">
+                    <Link to="/" onClick={() => setsearchValue("")}>
+                        Kitabi store
+                    </Link>
+                </h1>
+            </div>
+            <div className="navbar-wrapper-center wrapper-element">
+                <form className="search-form">
+                    <input
+                        type="search"
+                        placeholder="Search a book, author, category"
+                        className="search-input"
+                        defaultValue={searchValue}
+                        onChange={(event) => {
+                            value = event.target.value;
+                        }}
                     />
-                </div>
-                <div className="navbar-wrapper-center wrapper-element">
-                    <h1 className="logo">Kitabi store</h1>
-                </div>
-                <div className="navbar-wrapper-right wrapper-element">
-                    <button className="menu-item menu-item-register">
-                        Register
+                    <button
+                        className="search-button"
+                        type="button"
+                        onClick={() => setsearchValue(value)}
+                    >
+                        <div className="icon-search">
+                            <SearchOutlined />
+                        </div>
                     </button>
-                    <button className="menu-item menu-item-login">Login</button>
+                </form>
+                <Categories
+                    className="left-item menu-item categories-container"
+                    categories={categories}
+                />
+            </div>
+            <div className="navbar-wrapper-right wrapper-element">
+                <button className="menu-item menu-item-register">
+                    Register
+                </button>
+                <button className="menu-item menu-item-login">Login</button>
+                <div className="menu-item-cart" onClick={navigateToCart}>
                     <Badge
-                        className="menu-item menu-item-cart"
-                        badgeContent="5"
+                        className="menu-item"
+                        badgeContent={badgeNumber}
                         color="secondary"
                     >
                         <ShoppingCartOutlined />
                     </Badge>
-                    <MenuOutlined className="menu-item menu-item-toggleMenu" />
                 </div>
+                <MenuOutlined className="menu-item menu-item-toggleMenu" />
             </div>
-        </div>
+        </nav>
     );
 };
 

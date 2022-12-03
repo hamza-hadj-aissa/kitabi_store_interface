@@ -7,15 +7,16 @@ import {
     Pinterest,
 } from "@material-ui/icons";
 import { Component } from "react";
+import { Link } from "react-router-dom";
 import "../css/Footer.css";
 
 class Footer extends Component {
     state = {};
     render() {
         return (
-            <div className="footer-container">
+            <footer className="footer-container">
                 <div className="footer-left-container footer-element">
-                    <h1 className="footer-left-element-logo">Kitabi store</h1>
+                    <h2 className="footer-left-element-logo">Kitabi store</h2>
                     <p className="footer-left-element-description">
                         Curabitur tristique rhoncus consequat. Sed ac orci
                         pulvinar, tristique ante eget, tincidunt ex. Aenean
@@ -30,45 +31,44 @@ class Footer extends Component {
                         <Pinterest className="social-icon icon" />
                     </div>
                 </div>
-
                 <div className="footer-center-container footer-element">
-                    <h1 className="footer-small-title">Useful links</h1>
+                    <h2 className="footer-small-title">Useful links</h2>
                     <ul>
                         <li>
-                            <a href="#x">Home</a>
+                            <Link to="/">Home</Link>
                         </li>
                         <li>
-                            <a href="#x">Cart</a>
+                            <Link to="/">Cart</Link>
                         </li>
                         <li>
-                            <a href="#x">ders</a>
+                            <Link to="/">ders</Link>
                         </li>
                         <li>
-                            <a href="#x">ders</a>
+                            <Link to="/">ders</Link>
                         </li>
                         <li>
-                            <a href="#x">Home</a>
+                            <Link to="/">Home</Link>
                         </li>
                         <li>
-                            <a href="#x">Cart</a>
+                            <Link to="/">Cart</Link>
                         </li>
                         <li>
-                            <a href="#x">ders</a>
+                            <Link to="/">ders</Link>
                         </li>
                         <li>
-                            <a href="#x">ders</a>
+                            <Link to="/">ders</Link>
                         </li>
                     </ul>
                 </div>
 
                 <div className="footer-right-container footer-element">
-                    <h1 className="footer-small-title">Contact</h1>
+                    <h2 className="footer-small-title">Contact</h2>
                     <ul>
                         <li>
                             <EmailOutlined className="icon" />
-                            <a href="mailto:kitabi.store@gmail.com">
+                            <Link to="mailto:kitabi.store@gmail.com">
                                 kitabi.store@gmail.com
-                            </a>
+                            </Link>
                         </li>
                         <li>
                             <PhoneOutlined className="icon" />
@@ -82,7 +82,7 @@ class Footer extends Component {
                         </li>
                     </ul>
                 </div>
-            </div>
+            </footer>
         );
     }
 }
