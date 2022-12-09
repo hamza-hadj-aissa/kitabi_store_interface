@@ -3,34 +3,31 @@ import {
     PaymentOutlined,
     RemoveShoppingCartOutlined,
 } from "@material-ui/icons";
+import { useContext } from "react";
 import { useState } from "react";
 import { useLoaderData } from "react-router";
+import axios from "../api/axios";
 import Footer from "../components/Footer";
-import NavBar from "../components/NavBar/NavBar";
-import "../css/ProductDetails.css";
+import NavBar from "../components/NavBar";
+import { CartContext, CartDispatchContext } from "../context/CartProvider";
+import "../css/scss/productDetails.css";
 
-function ProductDetails({ addToCart, removeFromCart, badgeState }) {
-    let { book, bookInCart } = useLoaderData();
-
+function ProductDetails() {
     return (
         <>
-            <NavBar badgeState={badgeState} />
-            <ProductInfo
-                book={book}
-                addToCart={addToCart}
-                removeFromCart={removeFromCart}
-                bookInCart={bookInCart}
-            />
+            <NavBar />
+            <ProductInfo />
             <Footer />
         </>
     );
 }
 
-function ProductInfo({ book, addToCart, removeFromCart, bookInCart }) {
+function ProductInfo() {
+    let { book, bookInCart } = useLoaderData();
+    const { addToCart, removeFromCart } = useContext(CartContext);
+
     const [bookIsInCart, setBookIsInCart] = useState(bookInCart);
-    const getCartAction = () => {
-        return bookIsInCart ? _removeFromCart : _addToCart;
-    };
+    const { state } = useContext(CartContext);
 
     const getBookPrice = () => {
         if (book?.discount === 0) {
@@ -50,7 +47,7 @@ function ProductInfo({ book, addToCart, removeFromCart, bookInCart }) {
     };
 
     const getCartButton = () => {
-        if (bookIsInCart === true) {
+        if (bookIsInCart) {
             return (
                 <>
                     <div className="button-text">Remove from cart</div>
@@ -68,15 +65,24 @@ function ProductInfo({ book, addToCart, removeFromCart, bookInCart }) {
     };
 
     const _addToCart = async () => {
-        await addToCart(book.id).then((isInCart) => {
-            setBookIsInCart(isInCart);
-        });
+        await addToCart(book.id).then(() => setBookIsInCart(true));
     };
 
     const _removeFromCart = async () => {
-        await removeFromCart(book.id).then((isInCart) => {
-            setBookIsInCart(isInCart);
-        });
+        await removeFromCart(book.id).then(() => setBookIsInCart(false));
+    };
+
+    const buyBook = async () => {
+        await axios
+            .get("/orders")
+            .then((response) => console.log(response.data));
+        // await axios
+        //     .post("/orders/buy", {
+        //         books: [{ id: book.id, quantity: 1 }],
+        //     })
+        //     .then((response) => {
+        //         console.log("response", response.data);
+        //     });
     };
 
     return (
@@ -102,11 +108,18 @@ function ProductInfo({ book, addToCart, removeFromCart, bookInCart }) {
                 <div className="buttons-container">
                     <button
                         className="btn btn-add-to-cart"
-                        onClick={getCartAction()}
+                        onClick={async () =>
+                            bookIsInCart
+                                ? await _removeFromCart()
+                                : await _addToCart()
+                        }
                     >
                         {getCartButton()}
                     </button>
-                    <button className="btn btn-buy-book">
+                    <button
+                        className="btn btn-buy-book"
+                        onClick={async () => await buyBook()}
+                    >
                         <div className="button-text">Buy now</div>
                         <PaymentOutlined className="payement-icon" />
                     </button>

@@ -12,8 +12,8 @@ function Counter({ counter, onIncrementCounter, onDecrementCounter }) {
             <button
                 className="btn-minus btn"
                 onClick={() => onDecrementCounter(counter.id)}
-                disabled={counter.value <= 1}
-                style={counter.value <= 1 ? disabledButtonStyle : null}
+                disabled={counter.value <= 0}
+                style={counter.value <= 0 ? disabledButtonStyle : null}
             >
                 <RemoveOutlined className="minus-icon" />
             </button>

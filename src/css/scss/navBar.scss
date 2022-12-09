@@ -1,3 +1,7 @@
+body {
+    background-color: rgb(248, 247, 246);
+}
+
 .navbar-container {
     color: white;
     padding: 0px 20px;
@@ -49,7 +53,7 @@
     justify-content: flex-end;
 }
 
-.navbar-wrapper-right > button {
+.navbar-wrapper-right>button {
     background-color: #ffffff;
     border: 1px solid rgb(209, 213, 219);
     border-radius: 0.5rem;
@@ -69,13 +73,14 @@
     transition: all 200ms;
 }
 
-.navbar-wrapper-right > button:hover {
+.navbar-wrapper-right>button:hover {
     background-color: rgb(249, 250, 251);
     transform: scale(1.05);
 }
 
+.search-button {}
+
 .menu-item {
-    align-items: center;
     font-size: 14px;
     cursor: pointer;
     margin-left: 15px;
@@ -97,6 +102,7 @@
     justify-content: start;
     align-items: center;
 }
+
 .search-form.focus {
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
 }
@@ -135,4 +141,8 @@
 .search-input::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;
+}
+
+.menu-item-cart {
+    margin-left: 15px;
 }

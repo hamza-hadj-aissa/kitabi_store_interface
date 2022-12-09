@@ -1,0 +1,48 @@
+.products-container {
+    padding: 20px 20px;
+    margin: 20px 30px;
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.no-books-container {
+    display: grid;
+    grid-template-columns: 1fr;
+
+    >* {
+        place-self: center;
+        margin: 15px;
+    }
+
+    h2 {
+        font-size: 30px;
+    }
+
+    button {
+        font-size: 25px;
+        margin-left: 15px;
+        background-color: rgb(214, 194, 170);
+        border-radius: 50px;
+        border-width: 0;
+        box-shadow: rgba(25, 25, 25, 0.04) 0 0 1px 0, rgba(0, 0, 0, 0.1) 0 3px 4px 0;
+        color: rgb(104, 58, 1);
+        cursor: pointer;
+        height: 50px;
+        padding: 0 25px;
+        transition: all 200ms;
+
+        &:hover {
+            background-color: rgb(204, 185, 163);
+            transform: scale(1.05);
+        }
+
+        a {
+            color: rgb(104, 58, 1);
+            text-decoration: none;
+        }
+    }
+
+}

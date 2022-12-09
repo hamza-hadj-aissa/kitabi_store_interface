@@ -6,14 +6,95 @@
     justify-content: space-between;
     flex-wrap: wrap;
     background-color: white;
+
+    >.image-container {
+        margin-right: 30px;
+        height: 400px;
+        width: 280px;
+
+        >img {
+            aspect-ratio: 2/3;
+            height: 80%;
+            width: 80%;
+        }
+
+    }
+
+    .book-info-container {
+        display: block;
+        flex: 3;
+
+        .book-details {
+            text-align: start;
+
+            .book-title {
+                font-weight: bolder;
+            }
+
+            .book-description-container {
+                margin: 20px 0px;
+                text-align: justify;
+            }
+        }
+
+        .book-category-pages-container {
+            margin-bottom: 20px;
+
+            >* {
+                text-align: start;
+            }
+        }
+
+        .buttons-container {
+            margin: 20px 0px;
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            flex-wrap: wrap;
+            /* flex-wrap: wrap; */
+
+            button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 10px 0px;
+                margin-left: 15px;
+            }
+
+            .button-text {
+                font-size: 20px;
+                margin-right: 8px;
+
+                .add-to-cart-icon,
+                .payement-icon {
+                    font-size: 35px;
+                }
+            }
+        }
+
+        .book-price-container {
+            text-align: end;
+            font-size: 35px;
+            margin-left: 20px;
+
+            >p {
+                margin: 10px;
+            }
+        }
+
+        .before-discount {
+            text-decoration: line-through;
+        }
+    }
 }
 
-.product-details-main-container > .image-container {
+.product-details-main-container>.image-container {
     margin-right: 30px;
     height: 400px;
     width: 280px;
 }
-.product-details-main-container > .image-container > img {
+
+.product-details-main-container>.image-container>img {
     aspect-ratio: 2/3;
     height: 80%;
     width: 80%;
@@ -50,7 +131,7 @@
     margin-bottom: 20px;
 }
 
-.book-category-pages-container > * {
+.book-category-pages-container>* {
     text-align: start;
 }
 
@@ -60,7 +141,7 @@
     margin-left: 20px;
 }
 
-.book-price-container > p {
+.book-price-container>p {
     margin: 10px;
 }
 
@@ -75,17 +156,14 @@
     margin: 10px 0px;
 }
 
-.add-to-cart-icon,
-.payement-icon,
-.plus-icon,
-.minus-icon {
-    font-size: 35px;
-}
+// .add-to-cart-icon,
+// .payement-icon,
+// .plus-icon,
+// .minus-icon {
+//     font-size: 35px;
+// }
 
-.button-text {
-    font-size: 20px;
-    margin-right: 8px;
-}
+
 
 .product-details-main-container button {
     margin-left: 15px;
@@ -99,6 +177,7 @@
     padding: 0 25px;
     transition: all 200ms;
 }
+
 .product-details-main-container button:hover {
     background-color: rgb(204, 185, 163);
     transform: scale(1.05);
@@ -111,7 +190,7 @@
     align-items: center;
 }
 
-.counter-container > * {
+.counter-container>* {
     margin-left: 10px;
 }
 

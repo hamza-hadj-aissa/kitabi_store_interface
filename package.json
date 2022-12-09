@@ -39,7 +39,9 @@
     ]
   },
   "devDependencies": {
+    "js-cookie": "^3.0.1",
     "react-router": "^6.4.4",
-    "react-router-dom": "^6.4.4"
+    "react-router-dom": "^6.4.4",
+    "universal-cookie": "^4.0.4"
   }
 }
