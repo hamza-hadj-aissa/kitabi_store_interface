@@ -11,9 +11,16 @@ import { useNavigate } from "react-router";
 const Product = ({ book }) => {
     const Navigate = useNavigate();
     const { removeFromCart, addToCart, state } = useContext(CartContext);
-    const [isInCart, setIsInCart] = useState(() =>
-        state.findIndex((cart) => book.id === cart.id)
-    );
+    const [isInCart, setIsInCart] = useState(() => {
+        let bookIsInCart = false;
+        state.forEach((cart) => {
+            if (parseInt(book.id) === parseInt(cart.id)) {
+                bookIsInCart = true;
+            }
+        });
+        return bookIsInCart;
+    });
+
     const _addToCart = async (e) => {
         e.stopPropagation();
         await addToCart(book.id);

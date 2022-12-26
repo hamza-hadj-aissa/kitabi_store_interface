@@ -1,6 +1,6 @@
 import { Badge } from "@material-ui/core";
 import {
-    LocalShippingOutlined,
+    CloseOutlined,
     MenuOutlined,
     SearchOutlined,
     ShoppingCartOutlined,
@@ -12,9 +12,16 @@ import { CartContext } from "../context/CartProvider";
 import { AuthContext } from "../context/AuthProvider";
 import axios from "../api/axios";
 import Cookies from "js-cookie";
+import { useState } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { SearchContext } from "../context/SearchProvider";
 
-const NavBar = ({ setsearchValue, searchValue }) => {
+const NavBar = () => {
+    const { searchValue, setSearchValue } = useContext(SearchContext);
     const { user, setUser } = useContext(AuthContext);
+    const { state } = useContext(CartContext);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const Navigate = useNavigate();
     const navigateToCart = () => {
@@ -31,6 +38,15 @@ const NavBar = ({ setsearchValue, searchValue }) => {
 
     const navigateToLogin = () => {
         Navigate("/auth/login");
+    };
+
+    const navigateToHome = () => {
+        setSearchValue(null);
+        Navigate("/");
+    };
+
+    const navigateToProfile = () => {
+        Navigate("/profile");
     };
 
     const logout = async () => {
@@ -55,13 +71,6 @@ const NavBar = ({ setsearchValue, searchValue }) => {
         setUser(Cookies.get("token") ? true : false);
     };
 
-    // const categories = [
-    //     { name: "Category 1" },
-    //     { name: "Category 2" },
-    //     { name: "Category 3" },
-    //     { name: "Category 4" },
-    // ];
-
     const getAuthButtons = () => {
         if (!user) {
             return (
@@ -80,72 +89,112 @@ const NavBar = ({ setsearchValue, searchValue }) => {
                     </button>
                 </>
             );
-        } else {
-            return (
-                <>
-                    <button
-                        className="menu-item menu-item-register"
-                        onClick={async () => await logout()}
-                    >
-                        Logout
-                    </button>
-                    <div className="menu-item" onClick={navigateToOrders}>
-                        <LocalShippingOutlined />
-                    </div>
-                </>
-            );
         }
     };
 
-    const { state } = useContext(CartContext);
+    const Menu = () => {
+        const wrapperRef = useRef(null);
+        function useOutsideAlerter(ref) {
+            useEffect(() => {
+                function handleClickOutside(event) {
+                    if (ref.current && !ref.current.contains(event.target)) {
+                        setMenuOpen(false);
+                    }
+                }
+                if (menuOpen) {
+                    document.addEventListener("mousedown", handleClickOutside);
+                    return () => {
+                        document.removeEventListener(
+                            "mousedown",
+                            handleClickOutside
+                        );
+                    };
+                }
+            }, [ref]);
+        }
+        useOutsideAlerter(wrapperRef);
+        return (
+            <div className="dropdown-menu-container" ref={wrapperRef}>
+                <div onClick={() => setMenuOpen(!menuOpen)}>
+                    {menuOpen ? (
+                        <CloseOutlined className="menu-item menu-item-toggleMenu" />
+                    ) : (
+                        <MenuOutlined className="menu-item menu-item-toggleMenu" />
+                    )}
+                </div>
+                <div
+                    className={`dropdown-menu ${
+                        menuOpen ? "active" : "inactive"
+                    }`}
+                >
+                    <ul>
+                        <li onClick={navigateToProfile}>Profile</li>
+                        {user?.role === "client" ? (
+                            <li onClick={navigateToOrders}>My orders</li>
+                        ) : null}
+                        <li onClick={logout}>Logout</li>
+                    </ul>
+                </div>
+            </div>
+        );
+    };
+
+    const submitSearch = async (e) => {
+        e.preventDefault();
+        Navigate("/");
+    };
+
     let value = "";
     return (
         <nav className="navbar-container">
             <div className="navbar-wrapper-left wrapper-element">
                 <h1 className="logo">
-                    <Link to="/" onClick={() => setsearchValue("")}>
+                    <Link to="/" onClick={() => setSearchValue(null)}>
                         Kitabi
                     </Link>
                 </h1>
             </div>
             <div className="navbar-wrapper-center wrapper-element">
-                <form className="search-form">
+                <form className="search-form" onSubmit={submitSearch}>
                     <input
                         type="search"
                         placeholder="Search a book, author, category"
                         className="search-input"
-                        defaultValue={searchValue}
+                        // defaultValue={searchValue}
                         onChange={(event) => {
                             value = event.target.value;
                         }}
                     />
                     <button
                         className="search-button"
-                        type="button"
-                        onClick={() => setsearchValue(value)}
+                        type="submit"
+                        onClick={() => setSearchValue(value)}
                     >
                         <div className="icon-search">
                             <SearchOutlined />
                         </div>
                     </button>
                 </form>
-                {/* <Categories
-                    className="left-item menu-item categories-container"
-                    categories={categories}
-                /> */}
             </div>
             <div className="navbar-wrapper-right wrapper-element">
+                <ul>
+                    <li onClick={navigateToHome}>Home</li>
+                    <li>About</li>
+                    <li>Contact us</li>
+                </ul>
                 {getAuthButtons()}
-                <div className="menu-item-cart" onClick={navigateToCart}>
-                    <Badge
-                        className="menu-item"
-                        badgeContent={state?.length}
-                        color="secondary"
-                    >
-                        <ShoppingCartOutlined />
-                    </Badge>
-                </div>
-                <MenuOutlined className="menu-item menu-item-toggleMenu" />
+                {user?.role === "client" || !user ? (
+                    <div className="menu-item-cart" onClick={navigateToCart}>
+                        <Badge
+                            className="menu-item"
+                            badgeContent={state?.length}
+                            color="secondary"
+                        >
+                            <ShoppingCartOutlined />
+                        </Badge>
+                    </div>
+                ) : null}
+                {user ? <Menu /> : null}
             </div>
         </nav>
     );

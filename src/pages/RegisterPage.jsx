@@ -53,7 +53,7 @@ export const Register = () => {
                     lastName: lastNameState,
                     phone_number: phoneNumberState,
                     email: emailState,
-                    address: "Alger",
+                    address: null,
                     password: passwordState,
                     confirmPassword: confirmPasswordState,
                     user_type: 0,

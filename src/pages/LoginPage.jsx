@@ -21,8 +21,8 @@ const validateEmail = (email) => {
 };
 
 export const Login = () => {
+    const { passwordVisible, setPasswordVisibble } = useState(false);
     const Navigate = useNavigate();
-
     const { setUser } = useContext(AuthContext);
 
     const emailRef = useRef();
@@ -71,7 +71,11 @@ export const Login = () => {
                 .then((response) => {
                     if (response.status === 200) {
                         if (response.data.success) {
-                            setUser({ email: emailState });
+                            setUser({
+                                id: response.data.id,
+                                role: response.data.role,
+                                email: emailState,
+                            });
                             Navigate("/");
                         } else {
                             if (
@@ -125,7 +129,6 @@ export const Login = () => {
                         </p>
                     ) : null}
                 </p>
-
                 <label>Email</label>
                 <input
                     type="text"
@@ -135,10 +138,9 @@ export const Login = () => {
                     value={emailState}
                     onChange={(e) => setEmailState(e.target.value)}
                 />
-
                 <label>Password</label>
                 <input
-                    type="password"
+                    type={passwordVisible ? "text" : "password"}
                     placeholder="Enter your password"
                     name="password"
                     ref={passwordRef}
@@ -146,7 +148,14 @@ export const Login = () => {
                     onChange={(e) => setpasswordState(e.target.value)}
                     autoComplete="false"
                 />
-
+                <div className="showpassword-container">
+                    <input
+                        type="checkbox"
+                        checked={passwordVisible}
+                        onClick={() => setPasswordVisibble(!passwordVisible)}
+                    />
+                    <div>Show password</div>
+                </div>
                 <p>
                     Don't have an account ?{" "}
                     <Link className="click-here-link" to="/auth/register">

@@ -2,7 +2,22 @@ import { useLoaderData } from "react-router";
 import "../css/scss/orders.css";
 
 const Orders = () => {
-    const orders = useLoaderData();
+    const orders = useLoaderData() ?? [];
+
+    const getStatus = (status) => {
+        switch (status) {
+            case 0:
+                return "On route";
+            case 1:
+                return "In delivery";
+            case 2:
+                return "Delivered";
+            case 3:
+                return "Cancelled";
+            default:
+                return "";
+        }
+    };
 
     const oneOrderElement = (order) => {
         console.table(orders);
@@ -17,7 +32,7 @@ const Orders = () => {
                     </ul>
                 </td>
                 <td>{order.quantity}</td>
-                <td>On route</td>
+                <td>{getStatus(order.status)}</td>
                 <td>{order.totalAmount} DA</td>
             </tr>
         );

@@ -6,6 +6,7 @@
     max-height: 425px;
     margin: 10px 10px;
     border: 1px solid rgb(171, 169, 169, 0.5);
+    border-radius: 5px;
 
     &:hover {
         cursor: pointer;
@@ -25,7 +26,7 @@
 
     .icons-image-container {
         flex: 1;
-        width: 100%;
+        max-width: 250px;
         height: 80%;
         display: flex;
         align-items: center;

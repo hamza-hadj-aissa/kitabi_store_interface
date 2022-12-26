@@ -1,11 +1,12 @@
 import { DeleteOutlined, PaymentOutlined } from "@material-ui/icons";
 import { useContext } from "react";
 import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router";
+import { redirect, useLoaderData, useNavigate } from "react-router";
 import axios from "../api/axios";
 import Counter from "../components/Counter";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
+import { AuthContext } from "../context/AuthProvider";
 import { CartContext } from "../context/CartProvider";
 import "../css/scss/cart.css";
 
@@ -22,6 +23,7 @@ function Cart() {
 }
 
 function BooksListCart({ books }) {
+    const { user } = useContext(AuthContext);
     const Navigate = useNavigate();
     const { removeFromCart, state } = useContext(CartContext);
     const [booksState, setbooksState] = useState(books);
@@ -131,28 +133,44 @@ function BooksListCart({ books }) {
     };
 
     const buyBooks = async () => {
-        let booksToBuy = [];
-        booksState.map((book) => {
-            cartCounters.map((counter) => {
-                if (counter.id === book.id && counter.value > 0) {
-                    booksToBuy.push({ id: book.id, quantity: counter.value });
-                }
+        if (!user) {
+            Navigate("/auth/login", {
+                replace: true,
             });
-        });
-        await axios
-            .post("/orders/buy", {
-                books: booksToBuy,
-            })
-            .then((response) => {
-                if (response.status === 200 && response.data.success) {
-                    Navigate("/orders");
-                } else {
-                    alert(response.data.message ?? response.statusText);
-                }
-            })
-            .catch((err) => {
-                throw err;
+        } else {
+            let booksToBuy = [];
+            booksState.map((book) => {
+                cartCounters.map((counter) => {
+                    if (counter.id === book.id && counter.value > 0) {
+                        booksToBuy.push({
+                            id: book.id,
+                            quantity: counter.value,
+                        });
+                    }
+                });
             });
+            booksToBuy.length
+                ? await axios
+                      .post("/orders/buy", {
+                          books: booksToBuy,
+                      })
+                      .then((response) => {
+                          if (
+                              response.status === 200 &&
+                              response.data.success
+                          ) {
+                              Navigate("/orders");
+                          } else {
+                              alert(
+                                  response.data.message ?? response.statusText
+                              );
+                          }
+                      })
+                      .catch((err) => {
+                          throw err;
+                      })
+                : alert("Please indicate the quantity you want to order");
+        }
     };
 
     return (

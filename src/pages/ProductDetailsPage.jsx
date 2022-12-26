@@ -5,10 +5,11 @@ import {
 } from "@material-ui/icons";
 import { useContext } from "react";
 import { useState } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import axios from "../api/axios";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
+import { AuthContext } from "../context/AuthProvider";
 import { CartContext, CartDispatchContext } from "../context/CartProvider";
 import "../css/scss/productDetails.css";
 
@@ -23,6 +24,8 @@ function ProductDetails() {
 }
 
 function ProductInfo() {
+    const { user } = useContext(AuthContext);
+    const Navigate = useNavigate();
     let { book, bookInCart } = useLoaderData();
     const { addToCart, removeFromCart } = useContext(CartContext);
 
@@ -73,16 +76,40 @@ function ProductInfo() {
     };
 
     const buyBook = async () => {
-        await axios
-            .get("/orders")
-            .then((response) => console.log(response.data));
-        // await axios
-        //     .post("/orders/buy", {
-        //         books: [{ id: book.id, quantity: 1 }],
-        //     })
-        //     .then((response) => {
-        //         console.log("response", response.data);
-        //     });
+        await axios.get(`/users`).then(async (response) => {
+            if (response.data.success && response.status === 200) {
+                if (response.data.user?.address) {
+                    // display an address form
+                } else {
+                    await axios
+                        .post("/orders/buy", {
+                            books: [{ id: book.id, quantity: 1 }],
+                        })
+                        .then((response1) => {
+                            if (
+                                response1.status === 200 &&
+                                response1.data.success
+                            ) {
+                                Navigate("/orders");
+                            } else {
+                                throw Response(
+                                    response.data.message ??
+                                        response.statusText,
+                                    response.status
+                                );
+                            }
+                        })
+                        .catch((err) => {
+                            throw err;
+                        });
+                }
+            } else {
+                throw Response(
+                    response.data.message ?? response.statusText,
+                    response.status
+                );
+            }
+        });
     };
 
     return (
@@ -116,10 +143,7 @@ function ProductInfo() {
                     >
                         {getCartButton()}
                     </button>
-                    <button
-                        className="btn btn-buy-book"
-                        onClick={async () => await buyBook()}
-                    >
+                    <button className="btn btn-buy-book" onClick={buyBook}>
                         <div className="button-text">Buy now</div>
                         <PaymentOutlined className="payement-icon" />
                     </button>

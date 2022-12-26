@@ -13,13 +13,6 @@
     justify-content: center;
     margin: 20px 0px;
 
-    >* {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-    }
 
     section {
         display: flex;
@@ -101,6 +94,19 @@
                 outline: none;
             }
 
+        }
+
+        .showpassword-container {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+
+            input {
+                padding: 0;
+                margin: 0px 10px;
+                height: 15px;
+                width: 15px;
+            }
         }
     }
 
