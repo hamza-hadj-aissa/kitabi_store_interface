@@ -1,31 +1,36 @@
 import { DeleteOutlined, PaymentOutlined } from "@material-ui/icons";
-import axios from "axios";
+import { useContext } from "react";
 import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router";
+import { redirect, useLoaderData, useNavigate } from "react-router";
+import axios from "../api/axios";
 import Counter from "../components/Counter";
 import Footer from "../components/Footer";
-import NavBar from "../components/NavBar/NavBar";
-import "../css/Cart.css";
+import NavBar from "../components/NavBar";
+import { AuthContext } from "../context/AuthProvider";
+import { CartContext } from "../context/CartProvider";
+import "../css/scss/cart.css";
 
-function Cart({ badgeState, removeFromCart }) {
+function Cart() {
+    const Navigate = useNavigate();
     let books = useLoaderData();
-
     return (
         <div className="router-provider-container">
-            <NavBar badgeState={badgeState} />
-            <BooksListCart books={books} removeFromCart={removeFromCart} />
+            <NavBar />
+            <BooksListCart books={books} />
             <Footer />
         </div>
     );
 }
 
-function BooksListCart({ books, removeFromCart }) {
+function BooksListCart({ books }) {
+    const { user } = useContext(AuthContext);
     const Navigate = useNavigate();
+    const { removeFromCart, state } = useContext(CartContext);
     const [booksState, setbooksState] = useState(books);
     const [cartCounters, setcartCounters] = useState(
         books.map((book) => {
             return {
-                id: book.id,
+                id: book?.id,
                 value: 1,
             };
         })
@@ -45,8 +50,8 @@ function BooksListCart({ books, removeFromCart }) {
 
     const bookInCart = (book) => {
         return (
-            <div className="book-element" key={book.id}>
-                <div className="books-cart-left">
+            <tr key={book.id}>
+                <td className="books-cart-left">
                     <button
                         className="remove-from-cart-btn"
                         onClick={async () => await removeBookFromCart(book.id)}
@@ -58,7 +63,6 @@ function BooksListCart({ books, removeFromCart }) {
                         onClick={() => Navigate(`/books/${book.id}`)}
                     >
                         <img
-                            className="image-container"
                             alt="books"
                             src={`http://localhost:8080/${book.image}`}
                         />
@@ -70,8 +74,8 @@ function BooksListCart({ books, removeFromCart }) {
                             <p>39 In stock remaining</p>
                         </div>
                     </div>
-                </div>
-                <div className="books-quantity">
+                </td>
+                <td className="books-quantity">
                     <Counter
                         onDecrementCounter={onDecrementCounter}
                         onIncrementCounter={onIncrementCounter}
@@ -79,14 +83,15 @@ function BooksListCart({ books, removeFromCart }) {
                             (counter) => counter.id === book.id
                         )}
                     />
-                </div>
-                <div className="price-right price">
+                </td>
+                <td className="price">{book.price}</td>
+                <td className="price">
                     {book.price *
                         cartCounters.find((counter) => counter.id === book.id)
                             ?.value}{" "}
                     DA
-                </div>
-            </div>
+                </td>
+            </tr>
         );
     };
 
@@ -121,49 +126,78 @@ function BooksListCart({ books, removeFromCart }) {
     };
 
     const removeBookFromCart = async (id) => {
-        // await axios
-        //     .delete(`http://localhost:8000/cart/remove-from-cart/${id}`, {
-        //         withCredentials: true,
-        //     })
-        //     .then((response) => {
-        //         if (response.data.success) {
-        //             setbooksState(() =>
-        //                 booksState.filter((book) => book.id !== id)
-        //             );
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         throw Error(err.message);
-        //     });
-        await removeFromCart(id).then((bookIsInCart) => {
-            console.log(bookIsInCart);
-            if (!bookIsInCart) {
-                setbooksState(() =>
-                    booksState.filter((book) => book.id !== id)
-                );
-            }
+        await removeFromCart(id).then(() => {
+            let newBooksState = [...booksState];
+            setbooksState(newBooksState.filter((book) => book.id !== id));
         });
     };
 
+    const buyBooks = async () => {
+        if (!user) {
+            Navigate("/auth/login", {
+                replace: true,
+            });
+        } else {
+            let booksToBuy = [];
+            booksState.map((book) => {
+                cartCounters.map((counter) => {
+                    if (counter.id === book.id && counter.value > 0) {
+                        booksToBuy.push({
+                            id: book.id,
+                            quantity: counter.value,
+                        });
+                    }
+                });
+            });
+            booksToBuy.length
+                ? await axios
+                      .post("/orders/buy", {
+                          books: booksToBuy,
+                      })
+                      .then((response) => {
+                          if (
+                              response.status === 200 &&
+                              response.data.success
+                          ) {
+                              Navigate("/orders");
+                          } else {
+                              alert(
+                                  response.data.message ?? response.statusText
+                              );
+                          }
+                      })
+                      .catch((err) => {
+                          throw err;
+                      })
+                : alert("Please indicate the quantity you want to order");
+        }
+    };
+
     return (
-        <div
-            className="cart-container middle"
-            setbadgeState={booksState?.length}
-        >
-            <div className="cart-top">
-                <div className="cart-titles">
-                    <li>books</li>
-                    <li>Quantity</li>
-                    <li>Price</li>
-                </div>
+        <div className="cart-container middle">
+            <h1>My Cart</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <td>books</td>
+                        <td>Quantity</td>
+                        <td className="price">Unit price</td>
+                        <td className="price">Total price</td>
+                    </tr>
+                </thead>
+            </table>
+            <tbody>
                 <BooksList />
-            </div>
+            </tbody>
             <div
                 className="cart-bottom"
                 style={{ display: booksState.length ? null : "none" }}
             >
-                <div className="total-price price">{getTotalPrice()} DA</div>
-                <button className="btn btn-buy-books">
+                <div className="total-price">{getTotalPrice()} DA</div>
+                <button
+                    className="btn btn-buy-books"
+                    onClick={async () => await buyBooks()}
+                >
                     <div className="button-text">Buy now</div>
                     <PaymentOutlined className="payement-icon" />
                 </button>

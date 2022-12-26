@@ -8,10 +8,9 @@ import {
 } from "@material-ui/icons";
 import { Component } from "react";
 import { Link } from "react-router-dom";
-import "../css/Footer.css";
+import "../css/scss/footer.css";
 
 class Footer extends Component {
-    state = {};
     render() {
         return (
             <footer className="footer-container">
@@ -35,28 +34,28 @@ class Footer extends Component {
                     <h2 className="footer-small-title">Useful links</h2>
                     <ul>
                         <li>
-                            <Link to="/">Home</Link>
+                            <a href="/">Home</a>
                         </li>
                         <li>
-                            <Link to="/">Cart</Link>
+                            <a href="/">Cart</a>
                         </li>
                         <li>
-                            <Link to="/">ders</Link>
+                            <a href="/">ders</a>
                         </li>
                         <li>
-                            <Link to="/">ders</Link>
+                            <a href="/">ders</a>
                         </li>
                         <li>
-                            <Link to="/">Home</Link>
+                            <a href="/">Home</a>
                         </li>
                         <li>
-                            <Link to="/">Cart</Link>
+                            <a href="/">Cart</a>
                         </li>
                         <li>
-                            <Link to="/">ders</Link>
+                            <a href="/">ders</a>
                         </li>
                         <li>
-                            <Link to="/">ders</Link>
+                            <a href="/">ders</a>
                         </li>
                     </ul>
                 </div>

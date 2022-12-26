@@ -1,0 +1,82 @@
+.product-container {
+    display: block;
+    align-items: center;
+    justify-content: center;
+    width: clamp(250px, 15vw, 300px);
+    aspect-ratio: 2/3;
+    // max-height: 425px;
+    margin: 10px 10px;
+    border: 1px solid rgb(171, 169, 169, 0.5);
+    border-radius: 5px;
+
+    &:hover {
+        cursor: pointer;
+        transition: all 0.5s ease;
+        opacity: 1;
+        background-color: rgb(204, 185, 163, 0.5);
+
+        .icons-image-container {
+            .icons-container {
+                display: block;
+                transition: all 0.5s ease;
+            }
+        }
+    }
+
+
+
+    .icons-image-container {
+        flex: 1;
+        min-width: 250px;
+        max-width: 300px;
+        height: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        img {
+            height: 90%;
+            aspect-ratio: 2/3;
+            object-fit: contain;
+        }
+
+        .icons-container {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+
+            .icon-container {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: white;
+                color: rgb(104, 58, 1);
+                margin: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                &:hover {
+                    transition: all 0.5s ease;
+                    background-color: rgb(204, 185, 163);
+                    transform: scale(1.1);
+                }
+            }
+        }
+    }
+
+    .book-info-container {
+        // max-width: 250px;
+        display: block;
+        text-align: center;
+        text-overflow: ellipsis;
+        font-size: large;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin: 0px 5px;
+    }
+
+}

@@ -1,0 +1,53 @@
+.customers-container {
+    min-height: 95vh;
+    height: 100%;
+    margin: 20px 30px;
+    padding: 20px 10px;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+
+    h1 {
+        padding: 15px 10px;
+    }
+
+    thead {
+        tr {
+            display: flex;
+            padding: 5px 0px;
+            border: 1px solid rgb(171, 169, 169, 0.5);
+            border-left: none;
+            border-right: none;
+            font-size: 20px;
+            align-items: center;
+
+            td {
+                flex: 1;
+                text-align: center;
+                font-weight: bold;
+            }
+        }
+    }
+
+    tbody {
+        font-size: large;
+
+        tr {
+            display: flex;
+            padding: 10px 0px;
+            border-bottom: 1px solid rgb(171, 169, 169, 0.5);
+            align-items: center;
+
+            a {
+                text-decoration: none;
+                color: black;
+            }
+
+            td {
+                flex: 1;
+                text-align: center;
+            }
+        }
+    }
+}

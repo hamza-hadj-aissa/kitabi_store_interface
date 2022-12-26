@@ -1,14 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
-/* body::-webkit-scrollbar {
-    display: none;
-} */
+
 
 /* Hide scrollbar for IE, Edge and Firefox */
 body {
     font-family: "Montserrat", sans-serif;
-
-    /* -ms-overflow-style: none; 
-    scrollbar-width: none;  */
 }
 
 button {
@@ -24,5 +19,5 @@ button {
 }
 
 .middle {
-    min-height: 70vh;
+    min-height: 90vh;
 }

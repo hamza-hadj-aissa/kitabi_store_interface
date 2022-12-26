@@ -1,12 +1,20 @@
 import React from 'react';
 import App from './App';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, RouterProvider } from 'react-router-dom';
 
+import { CartProvider } from './context/CartProvider';
+import { AuthProvider } from './context/AuthProvider';
+import { SearchProvider } from './context/SearchProvider';
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
     <React.StrictMode>
-        <App />
+        <SearchProvider>
+            <AuthProvider>
+                <CartProvider>
+                    <App />
+                </CartProvider>
+            </AuthProvider>
+        </SearchProvider>
     </React.StrictMode>
 );
