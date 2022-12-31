@@ -1,15 +1,35 @@
-import { AddOutlined, EditOutlined } from "@material-ui/icons";
+import { useState } from "react";
+import { MdOutlineDelete } from "react-icons/md";
+import { FaBookMedical } from "react-icons/fa";
+import { BiEdit } from "react-icons/bi";
 import { useLoaderData, useNavigate } from "react-router";
-import "../../css/scss/booksInStore.css";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import "../../styles/scss/booksInStore.css";
 
 const Books = () => {
     const Navigate = useNavigate();
-    const books = useLoaderData();
+    const [books, setBooks] = useState(useLoaderData());
+    const axiosPrivate = useAxiosPrivate("admin");
     const navigateToBookEdit = (id) => {
-        Navigate(`/admin/books/edit/${id}`);
+        Navigate(`/admin/dashboard/books/edit/${id}`);
     };
     const navigateToBookAdd = () => {
-        Navigate("/admin/books/add");
+        Navigate("/admin/dashboard/books/add");
+    };
+
+    const deleteBook = async (id) => {
+        await axiosPrivate
+            .delete(`/books/delete/${id}`)
+            .then((response) => {
+                if (response.data.success) {
+                    setBooks((books) =>
+                        books.filter((book) => book?.id !== id)
+                    );
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     const getAllBooks = () => {
@@ -17,16 +37,27 @@ const Books = () => {
             return (
                 <tr key={book.id}>
                     <td className="books-cart-left">
-                        <button
-                            className="remove-from-cart-btn"
-                            onClick={() => navigateToBookEdit(book.id)}
+                        <div className="icons-container">
+                            <button
+                                className="remove-from-cart-btn"
+                                onClick={() => navigateToBookEdit(book.id)}
+                            >
+                                <BiEdit className="icon" size={25} />
+                            </button>
+                            <button
+                                className="remove-from-cart-btn"
+                                onClick={async () => await deleteBook(book?.id)}
+                            >
+                                <MdOutlineDelete className="icon" size={25} />
+                            </button>
+                        </div>
+                        <div
+                            className="book-link"
+                            onClick={() => Navigate(`/${book?.id}`)}
                         >
-                            <EditOutlined />
-                        </button>
-                        <div className="book-link">
                             <img
                                 alt="books"
-                                src={`http://localhost:8080/${book.image}`}
+                                src={`http://localhost:8080/images/${book.image}`}
                             />
                             <div className="books-title-author">
                                 <h2>{book.title}</h2>
@@ -34,8 +65,10 @@ const Books = () => {
                             </div>
                         </div>
                     </td>
-                    <td className="books-quantity numbers">{book.quantity}</td>
-                    <td className="books-quantity numbers">
+                    <td className="books-quantity numbers price">
+                        {book.quantity}
+                    </td>
+                    <td className="books-quantity numbers price">
                         {book.discount} %
                     </td>
                     <td className="price numbers">
@@ -62,25 +95,27 @@ const Books = () => {
     };
 
     return (
-        <div className="books-in-store-container">
-            <div>
-                <h1>Books</h1>
-                <button onClick={navigateToBookAdd}>
-                    Add a Book
-                    <AddOutlined />
-                </button>
+        <div className="books-in-store">
+            <div className="books-in-store-container">
+                <div>
+                    <h1>Books</h1>
+                    <button onClick={navigateToBookAdd}>
+                        Add a Book
+                        <FaBookMedical />
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Book</td>
+                            <td className="price">Quantity</td>
+                            <td className="price">Discount</td>
+                            <td className="price">Price</td>
+                        </tr>
+                    </thead>
+                </table>
+                <tbody>{getAllBooks()}</tbody>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <td>Book</td>
-                        <td>Quantity</td>
-                        <td>Discount</td>
-                        <td className="price">Price</td>
-                    </tr>
-                </thead>
-            </table>
-            <tbody>{getAllBooks()}</tbody>
         </div>
     );
 };

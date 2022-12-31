@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+button {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+}
+
+.router-provider-container {
+  display: flex;
+  justify-content: end;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.middle {
+  min-height: 90vh;
+}/*# sourceMappingURL=app.css.map */

@@ -1,15 +1,13 @@
-import {
-    EmailOutlined,
-    Facebook,
-    Instagram,
-    LocationOnOutlined,
-    PhoneOutlined,
-    Pinterest,
-} from "@material-ui/icons";
 import { Component } from "react";
 import { Link } from "react-router-dom";
-import "../css/scss/footer.css";
-
+import "../styles/scss/footer.css";
+import { GoLocation } from "react-icons/go";
+import {
+    MdOutlineFacebook,
+    MdPhone,
+    MdOutlineMailOutline,
+} from "react-icons/md";
+import { IoLogoInstagram, IoLogoPinterest } from "react-icons/io";
 class Footer extends Component {
     render() {
         return (
@@ -25,16 +23,16 @@ class Footer extends Component {
                         interdum, egestas risus non, pulvinar purus.
                     </p>
                     <div className="footer-left-element-socials">
-                        <Facebook className="social-icon icon" />
-                        <Instagram className="social-icon icon" />
-                        <Pinterest className="social-icon icon" />
+                        <MdOutlineFacebook className="icon" />
+                        <IoLogoInstagram className="icon" />
+                        <IoLogoPinterest className="icon" />
                     </div>
                 </div>
                 <div className="footer-center-container footer-element">
                     <h2 className="footer-small-title">Useful links</h2>
                     <ul>
                         <li>
-                            <a href="/">Home</a>
+                            <a href="/">Layout</a>
                         </li>
                         <li>
                             <a href="/">Cart</a>
@@ -46,7 +44,7 @@ class Footer extends Component {
                             <a href="/">ders</a>
                         </li>
                         <li>
-                            <a href="/">Home</a>
+                            <a href="/">Layout</a>
                         </li>
                         <li>
                             <a href="/">Cart</a>
@@ -64,20 +62,22 @@ class Footer extends Component {
                     <h2 className="footer-small-title">Contact</h2>
                     <ul>
                         <li>
-                            <EmailOutlined className="icon" />
+                            <MdOutlineMailOutline className="icon" />
                             <Link to="mailto:kitabi.store@gmail.com">
                                 kitabi.store@gmail.com
                             </Link>
                         </li>
                         <li>
-                            <PhoneOutlined className="icon" />
+                            <MdPhone className="icon" />
                             +213 2346788254
                         </li>
                         <li>
-                            <LocationOnOutlined className="icon" />2 Rue
-                            didouche mourad, Université d'Alger 1 - Benyoucef
-                            BENKHEDDA - Faculté des sciences - Département
-                            Informatique
+                            <span>
+                                <GoLocation className="icon" />
+                            </span>
+                            2 Rue didouche mourad, Université d'Alger 1 -
+                            Benyoucef BENKHEDDA - Faculté des sciences -
+                            Département Informatique
                         </li>
                     </ul>
                 </div>

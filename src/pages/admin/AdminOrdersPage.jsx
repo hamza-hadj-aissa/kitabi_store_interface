@@ -1,8 +1,7 @@
-import { useEffect } from "react";
 import { useState } from "react";
 import { useLoaderData } from "react-router";
-import axios from "../../api/axios";
-import "../../css/scss/orders.css";
+import "../../styles/scss/orders.css";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const AdminOrders = () => {
     const orders = useLoaderData() ?? [];
@@ -21,6 +20,7 @@ const AdminOrders = () => {
                     <tr>
                         <td className="half-flex">ID</td>
                         <td>Date</td>
+                        <td>Delivery address</td>
                         <td>Books</td>
                         <td>Quantity</td>
                         <td>Delivery status</td>
@@ -35,8 +35,9 @@ const AdminOrders = () => {
 
 const OneOrderElement = (order) => {
     const [statusState, setStatusState] = useState(parseInt(order.status));
+    const axiosPrivateAdmin = useAxiosPrivate("admin");
     const submitChange = async (e) => {
-        await axios
+        await axiosPrivateAdmin
             .put(`/orders/update/${order.id}`, {
                 status: e.target.value,
             })
@@ -60,6 +61,7 @@ const OneOrderElement = (order) => {
         <tr key={order.id}>
             <td className="half-flex">{order.id}</td>
             <td>{order.date}</td>
+            <td>{order.address}</td>
             <td>
                 <ul>
                     {order.books.map((book) => {

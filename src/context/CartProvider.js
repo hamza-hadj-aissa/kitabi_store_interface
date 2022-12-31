@@ -4,14 +4,14 @@ import axios from '../api/axios';
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-    const [state, setState] = useState([]);
+    const [cart, setCart] = useState([]);
 
     useEffect(() => {
         axios
             .get("http://localhost:8000/cart")
             .then((response) => {
-                if (response.status === 200 && response.data.success) {
-                    setState(response.data.cart);
+                if (response.data.success) {
+                    setCart(response.data.cart);
                 } else {
                     throw Response(
                         response.data.message ?? response.statusText,
@@ -25,8 +25,8 @@ export const CartProvider = ({ children }) => {
         return await axios
             .delete(`/cart/remove-from-cart/${id}`)
             .then((response) => {
-                if (response.status === 200 && response.data.success) {
-                    setState(response.data.cart);
+                if (response.data.success) {
+                    setCart(response.data.cart);
                 } else {
                     throw Response(
                         response.data.message
@@ -42,8 +42,8 @@ export const CartProvider = ({ children }) => {
         return await axios
             .get(`/cart/add-to-cart/${id}`)
             .then((response) => {
-                if (response.status === 200 && response.data.success) {
-                    setState(response.data.cart);
+                if (response.data.success) {
+                    setCart(response.data.cart);
                 } else {
                     throw Response(
                         response.data.message
@@ -56,7 +56,7 @@ export const CartProvider = ({ children }) => {
     };
 
     return (
-        <CartContext.Provider value={{ state, addToCart, removeFromCart }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
             {children}
         </CartContext.Provider>
     );

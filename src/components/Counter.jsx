@@ -1,4 +1,3 @@
-import { AddOutlined, RemoveOutlined } from "@material-ui/icons";
 import React from "react";
 
 function Counter({ counter, onIncrementCounter, onDecrementCounter }) {
@@ -15,14 +14,14 @@ function Counter({ counter, onIncrementCounter, onDecrementCounter }) {
                 disabled={counter.value <= 0}
                 style={counter.value <= 0 ? disabledButtonStyle : null}
             >
-                <RemoveOutlined className="minus-icon" />
+                -
             </button>
             <span className="counter-number">{counter.value}</span>
             <button
                 className="btn-plus btn"
                 onClick={() => onIncrementCounter(counter.id)}
             >
-                <AddOutlined className="plus-icon" />
+                +
             </button>
         </div>
     );

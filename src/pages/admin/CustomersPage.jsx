@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router";
-import "../../css/scss/customers.css";
+import "../../styles/scss/customers.css";
 
 const Customers = () => {
     const customers = useLoaderData();

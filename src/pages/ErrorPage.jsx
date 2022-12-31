@@ -1,8 +1,9 @@
-import { useRouteError } from "react-router-dom";
-import "../css/scss/errorPage.css";
+import { useNavigate, useRouteError } from "react-router-dom";
+import "../styles/scss/errorPage.css";
+
 function ErrorPage() {
     const error = useRouteError();
-
+    const Navigate = useNavigate();
     return (
         <div className="error-page">
             <h1>Oops!</h1>
@@ -10,6 +11,9 @@ function ErrorPage() {
             <p>
                 <i>{error.statusText || error.message}</i>
             </p>
+            <button onClick={() => Navigate(-1, { replace: true })}>
+                Go back
+            </button>
         </div>
     );
 }

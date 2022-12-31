@@ -1,40 +1,27 @@
-import {
-    AddShoppingCartOutlined,
-    PaymentOutlined,
-    RemoveShoppingCartOutlined,
-} from "@material-ui/icons";
-import { useContext } from "react";
 import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router";
-import axios from "../api/axios";
-import Footer from "../components/Footer";
-import NavBar from "../components/NavBar";
-import { AuthContext } from "../context/AuthProvider";
-import { CartContext, CartDispatchContext } from "../context/CartProvider";
-import "../css/scss/productDetails.css";
+import {
+    MdAddShoppingCart,
+    MdOutlinePayment,
+    MdRemoveShoppingCart,
+} from "react-icons/md";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
+import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useCart from "../hooks/useCart";
+import "../styles/scss/productDetails.css";
 
 function ProductDetails() {
-    return (
-        <>
-            <NavBar />
-            <ProductInfo />
-            <Footer />
-        </>
-    );
-}
-
-function ProductInfo() {
-    const { user } = useContext(AuthContext);
+    const loaction = useLocation();
+    const axiosPrivateClient = useAxiosPrivate();
+    const { auth } = useAuth;
     const Navigate = useNavigate();
-    let { book, bookInCart } = useLoaderData();
-    const { addToCart, removeFromCart } = useContext(CartContext);
+    let { book, bookInCart, category } = useLoaderData();
+    const { addToCart, removeFromCart } = useCart();
 
     const [bookIsInCart, setBookIsInCart] = useState(bookInCart);
-    const { state } = useContext(CartContext);
-
     const getBookPrice = () => {
         if (book?.discount === 0) {
-            return <div className="book-price-container">{book?.price}</div>;
+            return <div className="book-price-container">{book?.price} DA</div>;
         } else {
             return (
                 <div className="book-price-container">
@@ -54,14 +41,14 @@ function ProductInfo() {
             return (
                 <>
                     <div className="button-text">Remove from cart</div>
-                    <RemoveShoppingCartOutlined className="add-to-cart-icon" />
+                    <MdRemoveShoppingCart size={25} />
                 </>
             );
         } else {
             return (
                 <>
                     <div className="button-text">Add to cart</div>
-                    <AddShoppingCartOutlined className="add-to-cart-icon" />
+                    <MdAddShoppingCart size={25} />
                 </>
             );
         }
@@ -76,46 +63,42 @@ function ProductInfo() {
     };
 
     const buyBook = async () => {
-        await axios.get(`/users`).then(async (response) => {
-            if (response.data.success && response.status === 200) {
-                if (response.data.user?.address) {
-                    // display an address form
+        await axiosPrivateClient
+            .post("/orders/buy", {
+                books: [{ id: book.id, quantity: 1 }],
+            })
+            .then((response) => {
+                if (response.data.success) {
+                    Navigate("/orders");
                 } else {
-                    await axios
-                        .post("/orders/buy", {
-                            books: [{ id: book.id, quantity: 1 }],
-                        })
-                        .then((response1) => {
-                            if (
-                                response1.status === 200 &&
-                                response1.data.success
-                            ) {
-                                Navigate("/orders");
-                            } else {
-                                throw Response(
-                                    response.data.message ??
-                                        response.statusText,
-                                    response.status
-                                );
-                            }
-                        })
-                        .catch((err) => {
-                            throw err;
-                        });
+                    throw Response(
+                        response.data.message ?? response.statusText,
+                        response.status
+                    );
                 }
-            } else {
-                throw Response(
-                    response.data.message ?? response.statusText,
-                    response.status
-                );
-            }
-        });
+            })
+            .catch((err) => {
+                if (
+                    err.response.status === 403 ||
+                    err.response.status === 401
+                ) {
+                    Navigate("/auth/login", {
+                        state: { from: loaction },
+                        replace: true,
+                    });
+                } else {
+                    throw Response(
+                        err.response.data.message ?? err.response.statusText,
+                        err.response.status
+                    );
+                }
+            });
     };
 
     return (
         <div className="product-details-main-container">
             <img
-                src={`http://localhost:8080/${book?.image}`}
+                src={`http://localhost:8080/images/${book?.image}`}
                 className="image-container"
                 alt="bookk"
             />
@@ -128,7 +111,7 @@ function ProductInfo() {
                     </p>
                 </div>
                 <div className="book-category-pages-container">
-                    <div>Category: {book?.category}</div>
+                    <div>Category: {category.name}</div>
                     <div>Number of pages: {book?.pages_number}</div>
                 </div>
                 {getBookPrice()}
@@ -143,9 +126,17 @@ function ProductInfo() {
                     >
                         {getCartButton()}
                     </button>
-                    <button className="btn btn-buy-book" onClick={buyBook}>
+                    <button
+                        className={`btn btn-buy-book${
+                            "-" + !(auth?.role === "client" || !auth)
+                                ? "disabled"
+                                : null
+                        }`}
+                        onClick={buyBook}
+                        disabled={!(auth?.role === "client" || !auth)}
+                    >
                         <div className="button-text">Buy now</div>
-                        <PaymentOutlined className="payement-icon" />
+                        <MdOutlinePayment size={25} />
                     </button>
                 </div>
             </div>

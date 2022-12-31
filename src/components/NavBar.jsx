@@ -1,29 +1,33 @@
-import { Badge } from "@material-ui/core";
+import { useEffect, useRef, useState } from "react";
 import {
-    CloseOutlined,
-    MenuOutlined,
-    SearchOutlined,
-    ShoppingCartOutlined,
-} from "@material-ui/icons";
-import "../css/scss/navBar.css";
+    MdOutlineAdminPanelSettings,
+    MdOutlineClose,
+    MdOutlineLocalShipping,
+    MdOutlineLogout,
+    MdOutlineMenu,
+    MdOutlinePersonOutline,
+    MdOutlineShoppingCart,
+    MdSearch,
+} from "react-icons/md";
+import { IoIosArrowDown } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { CartContext } from "../context/CartProvider";
-import { AuthContext } from "../context/AuthProvider";
 import axios from "../api/axios";
-import Cookies from "js-cookie";
-import { useState } from "react";
-import { useRef } from "react";
-import { useEffect } from "react";
-import { SearchContext } from "../context/SearchProvider";
+import useAuth from "../hooks/useAuth";
+import useCart from "../hooks/useCart";
+import useRefreshToken from "../hooks/useRefreshToken";
+import useSearch from "../hooks/useSearch";
+import "../styles/scss/navBar.css";
 
 const NavBar = () => {
-    const { searchValue, setSearchValue } = useContext(SearchContext);
-    const { user, setUser } = useContext(AuthContext);
-    const { state } = useContext(CartContext);
+    const refresh = useRefreshToken("client");
+    const { setSearchValue } = useSearch();
+    const [search, setSearch] = useState(null);
+    const searchRef = useRef();
+    const { auth, setAuth } = useAuth();
+    const { cart } = useCart();
     const [menuOpen, setMenuOpen] = useState(false);
-
     const Navigate = useNavigate();
+
     const navigateToCart = () => {
         Navigate("/cart");
     };
@@ -51,46 +55,59 @@ const NavBar = () => {
 
     const logout = async () => {
         await axios
-            .get("/auth/logout")
+            .delete("/auth/logout")
             .then((response) => {
-                if (response.status === 200 && response.data.success) {
-                    setUser({});
-                    Navigate("/");
-                } else {
-                    throw Response(
-                        response.data.message
-                            ? response.data.message
-                            : response.statusText,
-                        response.status
-                    );
+                if (response.data.success) {
+                    // setHasLoggedOut(true);
+                    // setIsLoading(false);
+                    // Navigate("/", { replace: true });
+                    setAuth(null);
+                    window.location = "http://localhost:3000/";
                 }
             })
             .catch((err) => {
-                throw err;
+                throw Response(
+                    err.response.data.message
+                        ? err.response.data.message
+                        : err.response.statusText,
+                    err.response.status
+                );
             });
-        setUser(Cookies.get("token") ? true : false);
     };
 
     const getAuthButtons = () => {
-        if (!user) {
-            return (
-                <>
-                    <button
-                        className="menu-item menu-item-register"
-                        onClick={navigateToRegister}
-                    >
-                        Register
-                    </button>
-                    <button
-                        className="menu-item menu-item-login"
-                        onClick={navigateToLogin}
-                    >
-                        Login
-                    </button>
-                </>
-            );
-        }
+        return auth ? null : (
+            <>
+                <button
+                    className="menu-item menu-item-register"
+                    onClick={navigateToRegister}
+                >
+                    Register
+                </button>
+                <button
+                    className="menu-item menu-item-login"
+                    onClick={navigateToLogin}
+                >
+                    Login
+                </button>
+            </>
+        );
     };
+
+    useEffect(() => {
+        let isMounted = true;
+        const verifyAccessToken = async () => {
+            try {
+                await refresh();
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        if (!auth) {
+            isMounted && verifyAccessToken();
+        }
+        return () => (isMounted = false);
+    }, []);
 
     const Menu = () => {
         const wrapperRef = useRef(null);
@@ -117,9 +134,15 @@ const NavBar = () => {
             <div className="dropdown-menu-container" ref={wrapperRef}>
                 <div onClick={() => setMenuOpen(!menuOpen)}>
                     {menuOpen ? (
-                        <CloseOutlined className="menu-item menu-item-toggleMenu" />
+                        <MdOutlineClose
+                            size={25}
+                            className="menu-item menu-item-toggleMenu"
+                        />
                     ) : (
-                        <MenuOutlined className="menu-item menu-item-toggleMenu" />
+                        <MdOutlineMenu
+                            size={25}
+                            className="menu-item menu-item-toggleMenu"
+                        />
                     )}
                 </div>
                 <div
@@ -127,24 +150,30 @@ const NavBar = () => {
                         menuOpen ? "active" : "inactive"
                     }`}
                 >
-                    <ul>
-                        <li onClick={navigateToProfile}>Profile</li>
-                        {user?.role === "client" ? (
-                            <li onClick={navigateToOrders}>My orders</li>
+                    <ul onClick={() => (menuOpen ? setMenuOpen(false) : null)}>
+                        <li onClick={navigateToProfile}>
+                            <MdOutlinePersonOutline size={25} /> Profile
+                        </li>
+                        {auth?.role === "client" ? (
+                            <li onClick={navigateToOrders}>
+                                <MdOutlineLocalShipping size={25} /> My orders
+                            </li>
                         ) : null}
-                        <li onClick={logout}>Logout</li>
+                        <li onClick={async () => await logout()}>
+                            <MdOutlineLogout size={25} /> Logout
+                        </li>
                     </ul>
                 </div>
             </div>
         );
     };
 
-    const submitSearch = async (e) => {
+    const submitSearch = (e) => {
         e.preventDefault();
+        setSearchValue(search);
         Navigate("/");
     };
 
-    let value = "";
     return (
         <nav className="navbar-container">
             <div className="navbar-wrapper-left wrapper-element">
@@ -160,18 +189,13 @@ const NavBar = () => {
                         type="search"
                         placeholder="Search a book, author, category"
                         className="search-input"
-                        // defaultValue={searchValue}
-                        onChange={(event) => {
-                            value = event.target.value;
-                        }}
+                        ref={searchRef}
+                        onChange={(e) => setSearch(e.target.value)}
+                        value={search}
                     />
-                    <button
-                        className="search-button"
-                        type="submit"
-                        onClick={() => setSearchValue(value)}
-                    >
+                    <button className="search-button" type="submit">
                         <div className="icon-search">
-                            <SearchOutlined />
+                            <MdSearch />
                         </div>
                     </button>
                 </form>
@@ -181,20 +205,47 @@ const NavBar = () => {
                     <li onClick={navigateToHome}>Home</li>
                     <li>About</li>
                     <li>Contact us</li>
+                    <li className="drop-down">
+                        <div className="you-are">
+                            You are ? <IoIosArrowDown />
+                        </div>
+                        <div className="dropdown-list-container">
+                            <ul>
+                                <li
+                                    onClick={() =>
+                                        Navigate("/", { replace: true })
+                                    }
+                                >
+                                    <MdOutlinePersonOutline size={25} />
+                                    Cutomer
+                                </li>
+                                <li
+                                    onClick={() =>
+                                        Navigate("/admin/dashboard", {
+                                            replace: true,
+                                            preventScrollReset: false,
+                                        })
+                                    }
+                                >
+                                    <MdOutlineAdminPanelSettings size={25} />
+                                    Personal
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
                 {getAuthButtons()}
-                {user?.role === "client" || !user ? (
-                    <div className="menu-item-cart" onClick={navigateToCart}>
-                        <Badge
-                            className="menu-item"
-                            badgeContent={state?.length}
-                            color="secondary"
-                        >
-                            <ShoppingCartOutlined />
-                        </Badge>
-                    </div>
-                ) : null}
-                {user ? <Menu /> : null}
+                <div className="menu-item-cart shopping-cart-icon">
+                    <MdOutlineShoppingCart
+                        className="menu-item"
+                        onClick={navigateToCart}
+                        size={25}
+                    />
+                    {cart?.length > 0 ? (
+                        <div className="cart-badge">{cart?.length}</div>
+                    ) : null}
+                    {auth ? auth?.role === "client" ? <Menu /> : null : null}
+                </div>
             </div>
         </nav>
     );

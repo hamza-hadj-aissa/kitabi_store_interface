@@ -1,27 +1,32 @@
-import { CloseOutlined, MenuOutlined } from "@material-ui/icons";
-import Cookies from "js-cookie";
-import { useEffect, useRef } from "react";
-import { useContext } from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+    MdOutlineAdminPanelSettings,
+    MdOutlineClose,
+    MdOutlineKeyboardArrowDown,
+    MdOutlineLogout,
+    MdOutlineMenu,
+    MdOutlinePersonOutline,
+} from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../../../api/axios";
-import { AuthContext } from "../../../context/AuthProvider";
-import "../../../css/scss/adminNavBar.css";
+import useAuth from "../../../hooks/useAuth";
+import "../../../styles/scss/adminNavBar.css";
+
 const AdminNavBar = () => {
     const Navigate = useNavigate();
-    const { setUser, user } = useContext(AuthContext);
+    const { setAuth, auth } = useAuth();
     const [menuOpen, setMenuOpen] = useState(false);
 
     const navigateToProfile = () => {
-        Navigate("profile");
+        Navigate("/admin/profile");
     };
 
     const logout = async () => {
         await axios
-            .get("/auth/logout")
+            .delete("/auth/logout")
             .then((response) => {
                 if (response.data.success) {
-                    setUser(null);
+                    setAuth(null);
                     Navigate("/admin/auth/login");
                 } else {
                     throw Response(
@@ -40,7 +45,6 @@ const AdminNavBar = () => {
                     err.response.status
                 );
             });
-        setUser(Cookies.get("token") ? true : false);
     };
     const Menu = () => {
         const wrapperRef = useRef(null);
@@ -68,9 +72,15 @@ const AdminNavBar = () => {
             <div className="dropdown-menu-container" ref={wrapperRef}>
                 <div onClick={() => setMenuOpen(!menuOpen)}>
                     {menuOpen ? (
-                        <CloseOutlined className="menu-item menu-item-toggleMenu" />
+                        <MdOutlineClose
+                            size={25}
+                            className="menu-item menu-item-toggleMenu"
+                        />
                     ) : (
-                        <MenuOutlined className="menu-item menu-item-toggleMenu" />
+                        <MdOutlineMenu
+                            size={25}
+                            className="menu-item menu-item-toggleMenu"
+                        />
                     )}
                 </div>
                 <div
@@ -78,9 +88,13 @@ const AdminNavBar = () => {
                         menuOpen ? "active" : "inactive"
                     }`}
                 >
-                    <ul>
-                        <li onClick={navigateToProfile}>Profile</li>
-                        <li onClick={logout}>Logout</li>
+                    <ul onClick={() => setMenuOpen(false)}>
+                        <li onClick={navigateToProfile}>
+                            <MdOutlinePersonOutline size={25} /> Profile
+                        </li>
+                        <li onClick={async () => await logout()}>
+                            <MdOutlineLogout size={25} /> Logout
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -92,7 +106,37 @@ const AdminNavBar = () => {
             <h1 className="logo">
                 <Link to="/admin/dashboard">Kitabi Dashboard</Link>
             </h1>
-            <Menu />
+            <ul>
+                <li className="drop-down">
+                    <div className="you-are">
+                        You are ? <MdOutlineKeyboardArrowDown size={25} />
+                    </div>
+                    <div className="dropdown-list-container">
+                        <ul>
+                            <li
+                                onClick={() => Navigate("/", { replace: true })}
+                            >
+                                <MdOutlinePersonOutline size={25} />
+                                Cutomer
+                            </li>
+                            <li
+                                onClick={() =>
+                                    Navigate("/admin/dashboard", {
+                                        replace: true,
+                                        preventScrollReset: false,
+                                    })
+                                }
+                            >
+                                <MdOutlineAdminPanelSettings size={25} />
+                                Personal
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    {auth ? auth?.role === "admin" ? <Menu /> : null : null}
+                </li>
+            </ul>
         </nav>
     );
 };

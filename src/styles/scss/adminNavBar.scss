@@ -1,0 +1,166 @@
+.admin-navbar-container {
+    color: white;
+    padding: 0px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    background-color: rgb(36, 25, 10);
+
+    h1>* {
+        text-decoration: none;
+        color: white;
+        font-size: larger;
+
+        &:hover {
+            opacity: 0.5;
+        }
+    }
+
+    ul {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+
+        li {
+            cursor: pointer;
+            width: max-content;
+            padding: 10px;
+            border-radius: 5px;
+
+            div.dropdown-menu-container {
+                position: relative;
+                color: white;
+                font-weight: bold;
+
+                >div {
+                    svg {
+                        padding: 0;
+                        margin: 0;
+                    }
+                }
+
+                div {
+                    .menu-item-toggleMenu {
+                        font-size: 20px;
+                    }
+                }
+
+                .dropdown-menu {
+                    z-index: 1;
+                    position: absolute;
+                    top: 100%;
+                    right: 10%;
+                    width: 150px;
+                    background-color: white;
+                    color: #111827;
+                    border-radius: 5px;
+                    border: 0.5px solid rgb(128, 128, 128, 0.2);
+
+                    ul {
+                        list-style-type: none;
+                        padding: 0;
+                        display: block;
+
+                        li {
+                            width: auto;
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: start;
+                            align-items: center;
+                            gap: 10px;
+
+                            &:hover {
+                                background-color: rgba(177, 177, 177, 0.5);
+                            }
+                        }
+                    }
+
+                    &.active {
+                        display: block;
+                        visibility: visible;
+                        transform: translateY(0);
+                        transition: var(--speed) ease;
+                    }
+
+                    &.inactive {
+                        display: none;
+                        visibility: hidden;
+                        transform: translateY(-20px);
+                        transition: var(--speed) ease;
+                    }
+                }
+            }
+
+            &.drop-down {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+
+                >div.you-are {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    position: relative;
+                    gap: 10px;
+                }
+
+                &:hover {
+                    background-color: transparent;
+                    text-decoration: underline;
+
+                    div.dropdown-list-container {
+                        display: block;
+                    }
+                }
+
+                div.dropdown-list-container {
+                    background-color: rgb(110, 110, 110);
+                    position: absolute;
+                    top: 35px;
+                    right: 10px;
+                    z-index: 1;
+                    border-radius: 5px;
+                    display: none;
+                    padding: 0;
+
+                    ul {
+                        padding: 0;
+                        display: block;
+
+                        :first-child {
+                            border-bottom-left-radius: 0;
+                            border-bottom-right-radius: 0;
+                        }
+
+                        :nth-of-type(2) {
+                            border-top-left-radius: 0;
+                            border-top-right-radius: 0;
+                        }
+
+                        li {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            flex-direction: row;
+                            gap: 10px;
+                            width: auto;
+
+                            &:hover {
+                                background-color: rgba(177, 177, 177, 0.5);
+                            }
+
+                            .small-icon {
+                                height: 20px;
+                                width: 20px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

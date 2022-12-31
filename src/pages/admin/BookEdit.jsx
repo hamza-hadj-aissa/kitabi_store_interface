@@ -1,13 +1,18 @@
-import { AddOutlined, DeleteOutlined } from "@material-ui/icons";
-import axios from "../../api/axios";
 import { useState } from "react";
 import { useRef } from "react";
-import "../../css/scss/bookEdit.css";
+import "../../styles/scss/bookEdit.css";
 import { useLoaderData, useNavigate } from "react-router";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Categories from "./components/Categories";
+import { MdOutlineDelete } from "react-icons/md";
+import { RiImageAddLine } from "react-icons/ri";
 const BookEdit = () => {
     const Navigate = useNavigate();
-    const book = useLoaderData() ?? null;
-
+    const { book, category } = useLoaderData() ?? {
+        book: null,
+        category: null,
+    };
+    const axiosPrivateAdmin = useAxiosPrivate("admin");
     const titleRef = useRef();
     const authorRef = useRef();
     const descriptionRef = useRef();
@@ -20,19 +25,35 @@ const BookEdit = () => {
 
     const errRef = useRef();
 
-    const [titleState, setTitleState] = useState(book?.title ?? null);
-    const [authorState, setAuthorState] = useState(book?.author ?? null);
+    const [titleState, setTitleState] = useState(
+        book ? book?.title ?? null : null
+    );
+    const [authorState, setAuthorState] = useState(
+        book ? book?.author ?? null : null
+    );
     const [descritionState, setDescriptionState] = useState(
-        book?.description ?? null
+        book ? book?.description ?? null : null
     );
     const [pagesNumberState, setPagesNumberState] = useState(
-        book?.pages_number ?? 0
+        book ? book?.pages_number ?? 0 : null
     );
-    const [categoryState, setCategoryState] = useState();
-    const [priceState, setPriceState] = useState(book?.price ?? 0);
-    const [discountState, setDiscountState] = useState(book?.discount ?? 0);
-    const [quantityState, setQuantityState] = useState(book?.quantity ?? 0);
-    const [imageState, setImageState] = useState(book?.image ?? null);
+
+    const [categoryState, setCategoryState] = useState(
+        category ? category?.id ?? null : null
+    );
+    const [priceState, setPriceState] = useState(
+        book ? book?.price ?? 0 : null
+    );
+    const [discountState, setDiscountState] = useState(
+        book ? book?.discount ?? 0 : null
+    );
+    const [quantityState, setQuantityState] = useState(
+        book ? book?.quantity ?? 0 : null
+    );
+    const [imageState, setImageState] = useState(book ? book?.image : null);
+    const [serverImageState, setServerImageState] = useState(
+        book ? book?.image : null
+    );
 
     const [errMsg, setErrMsg] = useState("");
 
@@ -44,6 +65,8 @@ const BookEdit = () => {
         } else if (!authorState) {
             setErrMsg("Please enter book's author name");
             authorRef.current.focus();
+        } else if (!categoryState) {
+            setErrMsg("Please enter book's category");
         } else if (!pagesNumberState) {
             setErrMsg("Please enter book's pages number");
             pagesNumberRef.current.focus();
@@ -60,53 +83,72 @@ const BookEdit = () => {
             setErrMsg("Please insert book's cover");
             imageRef.current.focus();
         } else {
+            // appending data to be sent as form data
             let formData = new FormData();
-            formData.append("image", imageState);
             formData.append("title", titleState);
             formData.append("author", authorState);
+            formData.append("category", categoryState);
             formData.append("description", descritionState);
             formData.append("pages_number", pagesNumberState);
             formData.append("price", priceState);
             formData.append("discount", discountState);
             formData.append("quantity", quantityState);
+
             if (book === null) {
-                await axios
-                    .post("/books/create", formData)
+                // when adding a book, image attribute will have
+                // the new book's cover value
+                formData.append("image", imageState);
+
+                await axiosPrivateAdmin
+                    .post("/books/create", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    })
                     .then((response) => {
-                        if (response.data.success && response.status === 200) {
-                            Navigate("/admin/books");
+                        if (response.data.success) {
+                            Navigate("/admin/dashboard/books");
                         } else {
-                            throw new Response(
-                                response.data.message
-                                    ? response.data.message
-                                    : response.statusText,
-                                response.status
-                            );
+                            setErrMsg(response.data.message);
+                            errRef.current.focus();
                         }
                     })
                     .catch((err) => {
-                        throw err;
+                        setErrMsg(err.response.data.message);
+                        errRef.current.focus();
                     });
             } else {
-                await axios
-                    .put(`/books/update/${book.id}`, formData)
+                // when editing a book, if the book's cover has been changed,
+                // serverImageState is set to null. So the new book's cover
+                // value will be sent
+                formData.append("image", serverImageState ?? imageState);
+
+                await axiosPrivateAdmin
+                    .put(`/books/update/${book.id}`, formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    })
                     .then((response) => {
-                        if (response.data.success && response.status === 200) {
-                            Navigate("/admin/books");
+                        if (response.data.success) {
+                            Navigate("/admin/dashboard/books", {
+                                replace: true,
+                            });
                         } else {
-                            throw new Response(
-                                response.data.message
-                                    ? response.data.message
-                                    : response.statusText,
-                                response.status
-                            );
+                            setErrMsg(response.data.message);
+                            errRef.current.focus();
                         }
                     })
                     .catch((err) => {
-                        throw err;
+                        setErrMsg(err.response.data.message);
+                        errRef.current.focus();
                     });
             }
         }
+    };
+
+    const onCategorySelected = (id) => {
+        setCategoryState(id);
     };
 
     return (
@@ -146,15 +188,11 @@ const BookEdit = () => {
                             onChange={(e) => setAuthorState(e.target.value)}
                         />
 
-                        {/* <label>Category</label>
-                <input
-                    type=""
-                    placeholder="Enter book's author"
-                    name="author"
-                    ref={categoryRef}
-                    value={categoryState}
-                    onChange={(e) => setCategoryState(e.target.value)}
-                /> */}
+                        <Categories
+                            onCategorySelected={onCategorySelected}
+                            ref={categoryRef}
+                            defaultCategory={category?.name}
+                        />
 
                         <label>Pages number</label>
                         <input
@@ -226,48 +264,49 @@ const BookEdit = () => {
                                 setDescriptionState(e.target.value)
                             }
                         />
-
+                    </div>
+                    <div className="right-side">
                         <label>
                             Book cover (Only .jpg, .jpeg, .png are accepted)
                         </label>
                         <label className="image-input">
                             {imageState ? (
                                 <div className="image-info">
+                                    <img
+                                        src={
+                                            serverImageState
+                                                ? `http://localhost:8080/images/${serverImageState}`
+                                                : URL.createObjectURL(
+                                                      imageState
+                                                  )
+                                        }
+                                        alt={imageState.name}
+                                    />
                                     <button
-                                        onClick={() => {
+                                        className="delete-pic-button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             setImageState(null);
+                                            setServerImageState(null);
                                         }}
                                     >
-                                        <DeleteOutlined />
+                                        <MdOutlineDelete
+                                            className="icon"
+                                            size={25}
+                                        />
                                     </button>
-                                    {imageState.name ?? imageState}
                                 </div>
                             ) : (
-                                <div>
+                                <div className="add-book-cover">
                                     Add book cover
-                                    <AddOutlined />
+                                    <RiImageAddLine />
                                     <input
                                         type="file"
                                         name="image"
                                         accept=".jpg, .jpeg, .png"
-                                        onChange={(e) => {
-                                            // setImageState(e.target.files[0]);
-                                            if (
-                                                e.target.files[0].name.includes(
-                                                    ".jpg"
-                                                ) ||
-                                                e.target.files[0].name.includes(
-                                                    ".jpeg"
-                                                ) ||
-                                                e.target.files[0].name.includes(
-                                                    ".png"
-                                                )
-                                            ) {
-                                                setImageState(
-                                                    e.target.files[0]
-                                                );
-                                            }
-                                        }}
+                                        onChange={(e) =>
+                                            setImageState(e.target.files[0])
+                                        }
                                         disabled={imageState}
                                     />
                                 </div>

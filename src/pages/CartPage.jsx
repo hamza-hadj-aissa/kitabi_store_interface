@@ -1,31 +1,19 @@
-import { DeleteOutlined, PaymentOutlined } from "@material-ui/icons";
-import { useContext } from "react";
 import { useState } from "react";
-import { redirect, useLoaderData, useNavigate } from "react-router";
-import axios from "../api/axios";
+import { MdOutlineDelete, MdOutlinePayment } from "react-icons/md";
+import { useLoaderData, useNavigate } from "react-router";
 import Counter from "../components/Counter";
-import Footer from "../components/Footer";
-import NavBar from "../components/NavBar";
-import { AuthContext } from "../context/AuthProvider";
-import { CartContext } from "../context/CartProvider";
-import "../css/scss/cart.css";
+import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useCart from "../hooks/useCart";
+import "../styles/scss/cart.css";
 
 function Cart() {
-    const Navigate = useNavigate();
+    // const location = useLocation();
+    const axiosPrivateClient = useAxiosPrivate("client");
     let books = useLoaderData();
-    return (
-        <div className="router-provider-container">
-            <NavBar />
-            <BooksListCart books={books} />
-            <Footer />
-        </div>
-    );
-}
-
-function BooksListCart({ books }) {
-    const { user } = useContext(AuthContext);
+    const { auth } = useAuth();
     const Navigate = useNavigate();
-    const { removeFromCart, state } = useContext(CartContext);
+    const { removeFromCart } = useCart();
     const [booksState, setbooksState] = useState(books);
     const [cartCounters, setcartCounters] = useState(
         books.map((book) => {
@@ -56,22 +44,22 @@ function BooksListCart({ books }) {
                         className="remove-from-cart-btn"
                         onClick={async () => await removeBookFromCart(book.id)}
                     >
-                        <DeleteOutlined />
+                        <MdOutlineDelete className="icon" size={25} />
                     </button>
                     <div
                         className="book-link"
-                        onClick={() => Navigate(`/books/${book.id}`)}
+                        onClick={() => Navigate(`/${book.id}`)}
                     >
                         <img
                             alt="books"
-                            src={`http://localhost:8080/${book.image}`}
+                            src={`http://localhost:8080/images/${book.image}`}
                         />
                         <div className="books-title-author">
                             <div>
                                 <h2>{book.title}</h2>
                                 <h3>{book.author}</h3>
                             </div>
-                            <p>39 In stock remaining</p>
+                            <p>{book.quantity} remainings in stock</p>
                         </div>
                     </div>
                 </td>
@@ -133,44 +121,30 @@ function BooksListCart({ books }) {
     };
 
     const buyBooks = async () => {
-        if (!user) {
-            Navigate("/auth/login", {
-                replace: true,
+        let booksToBuy = [];
+        booksState.map((book) => {
+            cartCounters.map((counter) => {
+                if (counter.id === book.id && counter.value > 0) {
+                    booksToBuy.push({
+                        id: book.id,
+                        quantity: counter.value,
+                    });
+                }
             });
-        } else {
-            let booksToBuy = [];
-            booksState.map((book) => {
-                cartCounters.map((counter) => {
-                    if (counter.id === book.id && counter.value > 0) {
-                        booksToBuy.push({
-                            id: book.id,
-                            quantity: counter.value,
-                        });
-                    }
-                });
-            });
-            booksToBuy.length
-                ? await axios
-                      .post("/orders/buy", {
-                          books: booksToBuy,
-                      })
-                      .then((response) => {
-                          if (
-                              response.status === 200 &&
-                              response.data.success
-                          ) {
-                              Navigate("/orders");
-                          } else {
-                              alert(
-                                  response.data.message ?? response.statusText
-                              );
-                          }
-                      })
-                      .catch((err) => {
-                          throw err;
-                      })
-                : alert("Please indicate the quantity you want to order");
-        }
+        });
+        booksToBuy.length
+            ? await axiosPrivateClient
+                  .post("/orders/buy", {
+                      books: booksToBuy,
+                  })
+                  .then((response) => {
+                      if (response.data.success) {
+                          Navigate("/orders");
+                      } else {
+                          alert(response.data.message ?? response.statusText);
+                      }
+                  })
+            : alert("Please indicate the quantity you want to order");
     };
 
     return (
@@ -195,11 +169,16 @@ function BooksListCart({ books }) {
             >
                 <div className="total-price">{getTotalPrice()} DA</div>
                 <button
-                    className="btn btn-buy-books"
-                    onClick={async () => await buyBooks()}
+                    className={`btn btn-buy-book${
+                        "-" + !(auth?.role === "client" || !auth)
+                            ? "disabled"
+                            : null
+                    }`}
+                    onClick={buyBooks}
+                    disabled={!(auth?.role === "client" || !auth)}
                 >
                     <div className="button-text">Buy now</div>
-                    <PaymentOutlined className="payement-icon" />
+                    <MdOutlinePayment size={25} />
                 </button>
             </div>
         </div>

@@ -1,60 +1,60 @@
-import React from "react";
-import "../css/scss/auth.css";
-import "../css/scss/app.css";
-import { useRef } from "react";
-import { useState } from "react";
-import axios from "../api/axios";
-import { useNavigate } from "react-router";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthProvider";
+import React, { useEffect, useRef, useState } from "react";
+import { MdOutlineLogin } from "react-icons/md";
+import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import axios from "../api/axios";
+import useAuth from "../hooks/useAuth";
+import "../styles/scss/app.css";
+import "../styles/scss/auth.css";
 
 const EMAIL_REGEX =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const validateEmail = (email) => {
-    return String(email)
-        .toLowerCase()
-        .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-};
 
-export const Login = () => {
-    const { passwordVisible, setPasswordVisibble } = useState(false);
+const Login = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasLoggedIn, setHasLoggedIn] = useState(false);
+    const [passwordVisibleState, setPasswordVisibleState] = useState(false);
     const Navigate = useNavigate();
-    const { setUser } = useContext(AuthContext);
+    const loaction = useLocation();
+    const { setAuth } = useAuth();
 
     const emailRef = useRef();
     const passwordRef = useRef();
     const errRef = useRef();
+    const successRef = useRef();
 
-    const [emailState, setEmailState] = useState("");
-    const [passwordState, setpasswordState] = useState("");
+    const [emailState, setEmailState] = useState(null);
+    const [passwordState, setpasswordState] = useState(null);
 
-    const [errMsg, setErrMsg] = useState("");
+    const [errMsg, setErrMsg] = useState(null);
+    const [successMsg, setSuccessMsg] = useState(
+        loaction?.state?.message ?? null
+    );
     const [verifyEmail, setVerifyEmail] = useState(false);
     // const [emailErrMsg, setemailErrMsg] = useState("");
     // const [passwordErr, setpasswordErr] = useState("");
 
-    const sendEmailVerification = async () => {
-        await axios
-            .post("/auth/resend-confirmation-email", {
-                email: emailState,
-            })
-            .then((response) => {
-                if (response.data.success) {
-                    setErrMsg("Please check your inbox");
-                } else {
-                    setErrMsg(response.data.message);
-                }
-            })
-            .catch((err) => {
-                setErrMsg(err.response.data.message ?? err.response.statusText);
+    useEffect(() => {
+        let isMounted = true;
+        if (!isLoading && hasLoggedIn) {
+            Navigate(from, {
+                replace: true,
             });
-    };
+        }
+        isMounted && setIsLoading(false);
+        return () => {
+            isMounted = false;
+        };
+    }, [isLoading, hasLoggedIn]);
+
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+
+    const navigateToResendEmail = () =>
+        Navigate("/auth/send-verification-email");
 
     const handleSubmit = async (e) => {
+        setIsLoading(true);
         e.preventDefault();
         if (!emailState) {
             setErrMsg("Please enter your email");
@@ -68,98 +68,121 @@ export const Login = () => {
                     email: emailState,
                     password: passwordState,
                 })
-                .then((response) => {
+                .then(async (response) => {
                     if (response.data.success) {
-                        setUser({
+                        setHasLoggedIn(true);
+                        setAuth({
                             id: response.data.id,
                             role: response.data.role,
-                            email: emailState,
+                            accessToken: response.data.accessToken,
                         });
-                        Navigate("/");
-                    } else {
-                        if (response.data.message === "incorrect password") {
-                            setErrMsg("Incorrect password");
-                            passwordRef.current.focus();
-                        } else if (response.data.message === "user not found") {
-                            setErrMsg("User does not exist");
-                            emailRef.current.focus();
-                        } else if (
-                            response.data.message === "email is not verified"
-                        ) {
-                            setErrMsg("Please verify your email");
-                            setVerifyEmail(true);
-                        }
+                        // Navigate(from, {
+                        //     replace: true,
+                        // });
+                        // window.location = `http://localhost:3000${from}`;
                     }
                 })
                 .catch((err) => {
-                    setErrMsg(
-                        err.response.data.message ?? err.response.statusText
-                    );
+                    if (err.response.data.message === "incorrect password") {
+                        setErrMsg("Incorrect password");
+                        passwordRef.current.focus();
+                    } else if (err.response.data.message === "user not found") {
+                        setErrMsg("User does not exist");
+                        emailRef.current.focus();
+                    } else if (
+                        err.response.data.message === "email is not verified"
+                    ) {
+                        setErrMsg("Please verify your email");
+                        setVerifyEmail(true);
+                    } else {
+                        setErrMsg(
+                            err.response.data.message ?? err.response.statusText
+                        );
+                    }
                 });
         }
+        setIsLoading(false);
     };
 
     return (
-        <section about="Sign up">
-            <form
-                className="form-container"
-                onSubmit={handleSubmit}
-                onChange={(e) => {
-                    setErrMsg("");
-                    setVerifyEmail(false);
-                }}
-            >
-                <h2>Log in</h2>
-                <p
-                    ref={errRef}
-                    className={errMsg ? "errmsg" : "offscreen"}
-                    aria-live="assertive"
+        <div className="auth-container middle">
+            <section about="Log in">
+                <form
+                    className="form-container"
+                    onSubmit={handleSubmit}
+                    onChange={(e) => {
+                        setErrMsg(null);
+                        setVerifyEmail(false);
+                        setSuccessMsg(null);
+                    }}
                 >
-                    {errMsg}
-                    {verifyEmail ? (
-                        <p
-                            className="click-here-link"
-                            onClick={async () => await sendEmailVerification()}
-                        >
-                            Click here to verify your email
-                        </p>
-                    ) : null}
-                </p>
-                <label>Email</label>
-                <input
-                    type="text"
-                    placeholder="Enter your email"
-                    name="email"
-                    ref={emailRef}
-                    value={emailState}
-                    onChange={(e) => setEmailState(e.target.value)}
-                />
-                <label>Password</label>
-                <input
-                    type={passwordVisible ? "text" : "password"}
-                    placeholder="Enter your password"
-                    name="password"
-                    ref={passwordRef}
-                    value={passwordState}
-                    onChange={(e) => setpasswordState(e.target.value)}
-                    autoComplete="false"
-                />
-                <div className="showpassword-container">
+                    <h2>Log in</h2>
+                    <p
+                        ref={errRef}
+                        className={errMsg ? "errmsg" : "offscreen"}
+                        aria-live="assertive"
+                    >
+                        {errMsg}
+                    </p>
+                    <p
+                        ref={successRef}
+                        className={successMsg ? "successMsg" : "offscreen"}
+                        aria-live="assertive"
+                    >
+                        {successMsg}
+                    </p>
+                    <p>
+                        {verifyEmail ? (
+                            <p
+                                className="click-here-link"
+                                onClick={navigateToResendEmail}
+                            >
+                                Click here to verify your email
+                            </p>
+                        ) : null}
+                    </p>
+                    <label>Email</label>
                     <input
-                        type="checkbox"
-                        checked={passwordVisible}
-                        onClick={() => setPasswordVisibble(!passwordVisible)}
+                        type="text"
+                        placeholder="Enter your email"
+                        name="email"
+                        ref={emailRef}
+                        value={emailState}
+                        onChange={(e) => setEmailState(e.target.value)}
                     />
-                    <div>Show password</div>
-                </div>
-                <p>
-                    Don't have an account ?{" "}
-                    <Link className="click-here-link" to="/auth/register">
-                        Click here to register
-                    </Link>
-                </p>
-                <button>Log in</button>
-            </form>
-        </section>
+                    <label>Password</label>
+                    <input
+                        type={passwordVisibleState ? "text" : "password"}
+                        placeholder="Enter your password"
+                        name="password"
+                        ref={passwordRef}
+                        value={passwordState}
+                        onChange={(e) => setpasswordState(e.target.value)}
+                        autoComplete="false"
+                    />
+                    <div className="showpassword-container">
+                        <input
+                            type="checkbox"
+                            checked={passwordVisibleState}
+                            onChange={(e) =>
+                                setPasswordVisibleState(!passwordVisibleState)
+                            }
+                        />
+                        <div>Show password</div>
+                    </div>
+                    <p>
+                        Don't have an account ?{" "}
+                        <Link className="click-here-link" to="/auth/register">
+                            Click here to register
+                        </Link>
+                    </p>
+                    <button>
+                        Log in <MdOutlineLogin />
+                    </button>
+                </form>
+            </section>
+        </div>
     );
 };
+
+export default Login;

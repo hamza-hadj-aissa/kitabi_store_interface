@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router";
-import "../css/scss/orders.css";
+import "../styles/scss/orders.css";
 
 const Orders = () => {
     const orders = useLoaderData() ?? [];
@@ -20,7 +20,6 @@ const Orders = () => {
     };
 
     const oneOrderElement = (order) => {
-        console.table(orders);
         return (
             <tr>
                 <td>{order.date}</td>

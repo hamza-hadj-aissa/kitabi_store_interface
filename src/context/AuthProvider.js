@@ -3,10 +3,10 @@ import Cookies from 'js-cookie';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(Cookies.get("token") ? true : false);
+    const [auth, setAuth] = useState(null);
 
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{ auth, setAuth }}>
             {children}
         </AuthContext.Provider>
     );

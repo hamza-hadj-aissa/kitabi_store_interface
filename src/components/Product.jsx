@@ -1,20 +1,15 @@
-import {
-    AddShoppingCartOutlined,
-    RemoveShoppingCartOutlined,
-} from "@material-ui/icons";
-import { useContext } from "react";
-import "../css/scss/product.css";
-import { CartContext } from "../context/CartProvider";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { MdAddShoppingCart, MdRemoveShoppingCart } from "react-icons/md";
+import useCart from "../hooks/useCart";
+import "../styles/scss/product.css";
 
-const Product = ({ book }) => {
-    const Navigate = useNavigate();
-    const { removeFromCart, addToCart, state } = useContext(CartContext);
+const Product = ({ book, onBookClicked }) => {
+    const { removeFromCart, addToCart, cart } = useCart();
+
     const [isInCart, setIsInCart] = useState(() => {
         let bookIsInCart = false;
-        state.forEach((cart) => {
-            if (parseInt(book.id) === parseInt(cart.id)) {
+        cart?.forEach((cart) => {
+            if (parseInt(book?.id) === parseInt(cart.id)) {
                 bookIsInCart = true;
             }
         });
@@ -23,13 +18,13 @@ const Product = ({ book }) => {
 
     const _addToCart = async (e) => {
         e.stopPropagation();
-        await addToCart(book.id);
+        await addToCart(book?.id);
         setIsInCart(true);
     };
 
     const _removeFromCart = async (e) => {
         e.stopPropagation();
-        await removeFromCart(book.id);
+        await removeFromCart(book?.id);
         setIsInCart(false);
     };
 
@@ -37,13 +32,13 @@ const Product = ({ book }) => {
         if (isInCart) {
             return (
                 <div className="icon-container" onClick={_removeFromCart}>
-                    <RemoveShoppingCartOutlined />
+                    <MdRemoveShoppingCart size={22.5} />
                 </div>
             );
         } else {
             return (
                 <div className="icon-container" onClick={_addToCart}>
-                    <AddShoppingCartOutlined />
+                    <MdAddShoppingCart size={22.5} />
                 </div>
             );
         }
@@ -53,7 +48,7 @@ const Product = ({ book }) => {
         <div
             className="product-container"
             onClick={(e) => {
-                Navigate(`/books/${book.id}`);
+                onBookClicked(book?.id);
             }}
         >
             <div className="icons-image-container">
@@ -61,13 +56,15 @@ const Product = ({ book }) => {
                 <img
                     className="image-container"
                     alt="book"
-                    src={`http://localhost:8080/${book.image}`}
+                    src={`http://localhost:8080/images/${book?.image}`}
                 />
             </div>
             <div className="book-info-container">
-                <div className="book-title">{book.title}</div>
-                <div className="book-author">{book.author}</div>
-                <div className="book-price">{book.price} DA</div>
+                <div className="book-title">{book?.title}</div>
+                <div className="book-author">{book?.author}</div>
+                <div className="book-price">
+                    {book?.price - (book?.price * book?.discount) / 100} DA
+                </div>
             </div>
         </div>
     );

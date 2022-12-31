@@ -1,20 +1,17 @@
-import React from "react";
-import "../../css/scss/auth.css";
-import "../../css/scss/app.css";
-import { useRef } from "react";
-import { useState } from "react";
+import React, { useRef, useState } from "react";
+import "../../styles/scss/app.css";
+import "../../styles/scss/auth.css";
 import axios from "../../api/axios";
-import { useNavigate } from "react-router";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthProvider";
+import useAuth from "../../hooks/useAuth";
+import { MdOutlineLogin } from "react-icons/md";
 
 const EMAIL_REGEX =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const AdminLogin = () => {
-    const { passwordVisible, setPasswordVisibble } = useState(false);
-    const Navigate = useNavigate();
-    const { setUser } = useContext(AuthContext);
+    const [passwordVisible, setPasswordVisibble] = useState(false);
+    // const Navigate = useNavigate();
+    const { setAuth } = useAuth();
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -36,19 +33,24 @@ export const AdminLogin = () => {
         } else if (!passwordState) {
             setErrMsg("Please enter your password");
         } else {
-            await axios
+            return await axios
                 .post("/auth/admin/login", {
                     email: emailState,
                     password: passwordState,
                 })
                 .then((response) => {
                     if (response.data.success) {
-                        setUser({
+                        setAuth({
                             id: response.data.id,
                             role: response.data.role,
-                            email: emailState,
+                            accessToken: response.data.accessToken,
                         });
-                        Navigate("/admin/dashboard");
+                        // Navigate("/admin/dashboard", {
+                        //     replace: true,
+                        //     preventScrollReset: false,
+                        // });
+                        window.location =
+                            "http://localhost:3000/admin/dashboard";
                     } else {
                         if (response.data.message === "incorrect password") {
                             setErrMsg("Incorrect password");
@@ -74,7 +76,6 @@ export const AdminLogin = () => {
             <section about="Log in - Admin">
                 <form
                     className="form-container"
-                    onSubmit={handleSubmit}
                     onChange={(e) => {
                         setErrMsg("");
                     }}
@@ -110,13 +111,15 @@ export const AdminLogin = () => {
                         <input
                             type="checkbox"
                             checked={passwordVisible}
-                            onClick={() =>
+                            onChange={() =>
                                 setPasswordVisibble(!passwordVisible)
                             }
                         />
                         <div>Show password</div>
                     </div>
-                    <button>Log in</button>
+                    <button type="submit" onClick={handleSubmit}>
+                        Log in <MdOutlineLogin />
+                    </button>
                 </form>
             </section>
         </div>

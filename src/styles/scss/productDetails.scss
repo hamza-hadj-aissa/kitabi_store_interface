@@ -1,0 +1,219 @@
+.product-details-main-container {
+    padding: 20px 50px;
+    margin: 20px 30px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background-color: white;
+
+    >.image-container {
+        margin-right: 30px;
+        height: 400px;
+        width: 280px;
+
+        >img {
+            aspect-ratio: 2/3;
+            height: 80%;
+            width: 80%;
+        }
+
+    }
+
+    .book-info-container {
+        display: block;
+        flex: 3;
+
+        .book-details {
+            text-align: start;
+
+            .book-title {
+                font-weight: bolder;
+            }
+
+            .book-description-container {
+                margin: 20px 0px;
+                text-align: justify;
+                font-size: large;
+            }
+        }
+
+        .book-category-pages-container {
+            margin-bottom: 20px;
+            font-size: large;
+
+            >* {
+                text-align: start;
+            }
+        }
+
+        .buttons-container {
+            margin: 20px 0px;
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            flex-wrap: wrap;
+            /* flex-wrap: wrap; */
+
+            button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 10px 0px;
+                margin-left: 15px;
+                gap: 10px;
+            }
+
+            .button-text {
+                font-size: 20px;
+            }
+
+            .add-to-cart-icon,
+            .payement-icon {
+                font-size: 22px;
+            }
+        }
+
+        .book-price-container {
+            text-align: end;
+            font-size: 35px;
+            margin-left: 20px;
+
+            >p {
+                margin: 10px;
+            }
+        }
+
+        .before-discount {
+            text-decoration: line-through;
+        }
+    }
+}
+
+.product-details-main-container>.image-container {
+    margin-right: 30px;
+    height: 400px;
+    width: 280px;
+}
+
+.product-details-main-container>.image-container>img {
+    aspect-ratio: 2/3;
+    height: 80%;
+    width: 80%;
+}
+
+.book-info-container {
+    display: block;
+    flex: 3;
+}
+
+.book-details {
+    text-align: start;
+}
+
+.book-title {
+    font-weight: bolder;
+}
+
+.book-description-container {
+    margin: 20px 0px;
+    text-align: justify;
+}
+
+.buttons-container {
+    margin: 20px 0px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+}
+
+.book-category-pages-container {
+    margin-bottom: 20px;
+}
+
+.book-category-pages-container>* {
+    text-align: start;
+}
+
+.book-price-container {
+    text-align: end;
+    font-size: 35px;
+    margin-left: 20px;
+}
+
+.book-price-container>p {
+    margin: 10px;
+}
+
+.before-discount {
+    text-decoration: line-through;
+}
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+// .add-to-cart-icon,
+// .payement-icon,
+// .plus-icon,
+// .minus-icon {
+//     font-size: 35px;
+// }
+
+
+
+.product-details-main-container button {
+    margin-left: 15px;
+    background-color: rgb(214, 194, 170);
+    border-radius: 5px;
+    border-width: 0;
+    box-shadow: rgba(25, 25, 25, 0.04) 0 0 1px 0, rgba(0, 0, 0, 0.1) 0 3px 4px 0;
+    color: rgb(104, 58, 1);
+    height: 50px;
+    padding: 0 25px;
+    transition: all 200ms;
+    opacity: 0.5;
+
+    &:enabled {
+        cursor: pointer;
+        opacity: 1;
+
+        &:hover {
+            background-color: rgb(204, 185, 163);
+            transform: scale(1.05);
+        }
+    }
+}
+
+// .product-details-main-container button:hover {
+//     background-color: rgb(204, 185, 163);
+//     transform: scale(1.05);
+// }
+
+.counter-container,
+.counter-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.counter-container>* {
+    margin-left: 10px;
+}
+
+.counter-container .counter-number {
+    margin-left: 15px;
+    background-color: rgb(214, 194, 170);
+    border-radius: 5px;
+    border-width: 0;
+    box-shadow: rgba(25, 25, 25, 0.04) 0 0 1px 0, rgba(0, 0, 0, 0.1) 0 3px 4px 0;
+    color: rgb(104, 58, 1);
+    height: 50px;
+    padding: 0 25px;
+    font-size: 20px;
+}
