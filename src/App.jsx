@@ -424,7 +424,7 @@ const App = () => {
                     element: <BookEdit />,
                     loader: async ({ params }) => {
                         return await axiosPrivateAdmin
-                            .get(`http://localhost:8000/books/${params.id}`)
+                            .get(`/books/admin/${params.id}`)
                             .then((response) => {
                                 if (response.data.success) {
                                     return {
