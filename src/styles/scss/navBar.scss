@@ -47,6 +47,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 5px;
 
     ul {
         display: flex;
@@ -206,13 +207,14 @@ nav {
                 transition: var(--speed) ease;
             }
         }
+
     }
 
     .menu-item-cart {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 18px;
+        // gap: 10px;
 
         .menu-item {
             font-size: 20px;
@@ -241,6 +243,7 @@ nav {
             position: absolute;
             bottom: 12.5px;
             left: 15px;
+
         }
 
         &:hover {
@@ -248,36 +251,52 @@ nav {
             opacity: 0.5;
         }
     }
+
+    .navbar-icons-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
 }
 
-.navbar-wrapper-right>button {
-    background-color: #ffffff;
-    border: 1px solid rgb(209, 213, 219);
-    border-radius: 5px;
-    box-sizing: border-box;
-    color: #111827;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    padding: 7px;
-    text-align: center;
-    text-decoration: none #d1d5db solid;
-    text-decoration-thickness: auto;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    transition: all 200ms;
-    margin-left: 15px;
-}
-
-.navbar-wrapper-right>button:hover {
+.navbar-wrapper-right>.navbar-wrapper-right>button:hover {
     background-color: rgb(249, 250, 251);
     transform: scale(1.05);
 }
 
-.menu-item:hover {
-    opacity: 0.5;
+.navbar-container {
+    .auth-buttons-container {
+        margin: 0px 10px;
+
+        button {
+            background-color: #ffffff;
+            border: 1px solid rgb(209, 213, 219);
+            border-radius: 5px;
+            box-sizing: border-box;
+            color: #111827;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            padding: 7px;
+            text-align: center;
+            text-decoration: none #d1d5db solid;
+            text-decoration-thickness: auto;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            transition: all 200ms;
+            margin-left: 15px;
+        }
+    }
+
+    .menu-item {
+        &:hover {
+            opacity: 0.5;
+            cursor: pointer;
+        }
+    }
 }
 
 .search-form {
@@ -296,42 +315,42 @@ nav {
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
 }
 
-.search-form .search-button {
-    height: 100%;
-    /* margin-right: 5px; */
-    border: none;
-    border-radius: 5px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    background-color: white;
-    color: gray;
-    align-items: center;
-    padding: 0px 8px;
-    margin: 5px 0px;
-}
+.search-form {
 
-.search-form .search-button:hover {
-    background-color: #dfdfdf;
-}
+    .search-input {
+        font-size: 16px;
+        background: none;
+        color: #5a6674;
+        width: 100%;
+        height: 100%;
+        margin-left: 20px;
+        border: none;
+        -webkit-appearance: none;
+        appearance: none;
+        outline: none;
 
-.search-input {
-    font-size: 16px;
-    background: none;
-    color: #5a6674;
-    width: 100%;
-    height: 100%;
-    margin-left: 20px;
-    border: none;
-    -webkit-appearance: none;
-    appearance: none;
-    outline: none;
-}
+        &::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+    }
 
-.search-input::-webkit-search-cancel-button {
-    -webkit-appearance: none;
-    appearance: none;
-}
+    .search-button {
+        height: 100%;
+        /* margin-right: 5px; */
+        border: none;
+        border-radius: 5px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        background-color: white;
+        color: gray;
+        align-items: center;
+        padding: 0px 8px;
+        margin: 5px 0px;
+        position: relative;
 
-.menu-item-cart {
-    margin-left: 15px;
+        &:hover {
+            background-color: #dfdfdf;
+        }
+    }
 }

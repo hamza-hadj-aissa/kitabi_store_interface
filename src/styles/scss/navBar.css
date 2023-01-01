@@ -43,6 +43,7 @@ nav .wrapper-element {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 5px;
 }
 .navbar-wrapper-right ul {
   display: flex;
@@ -180,7 +181,6 @@ nav .wrapper-element {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 18px;
 }
 .navbar-wrapper-right .menu-item-cart .menu-item {
   font-size: 20px;
@@ -211,8 +211,22 @@ nav .wrapper-element {
   cursor: pointer;
   opacity: 0.5;
 }
+.navbar-wrapper-right .navbar-icons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
 
-.navbar-wrapper-right > button {
+.navbar-wrapper-right > .navbar-wrapper-right > button:hover {
+  background-color: rgb(249, 250, 251);
+  transform: scale(1.05);
+}
+
+.navbar-container .auth-buttons-container {
+  margin: 0px 10px;
+}
+.navbar-container .auth-buttons-container button {
   background-color: #ffffff;
   border: 1px solid rgb(209, 213, 219);
   border-radius: 5px;
@@ -235,14 +249,9 @@ nav .wrapper-element {
   transition: all 200ms;
   margin-left: 15px;
 }
-
-.navbar-wrapper-right > button:hover {
-  background-color: rgb(249, 250, 251);
-  transform: scale(1.05);
-}
-
-.menu-item:hover {
+.navbar-container .menu-item:hover {
   opacity: 0.5;
+  cursor: pointer;
 }
 
 .search-form {
@@ -261,25 +270,7 @@ nav .wrapper-element {
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
 }
 
-.search-form .search-button {
-  height: 100%;
-  /* margin-right: 5px; */
-  border: none;
-  border-radius: 5px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-  background-color: white;
-  color: gray;
-  align-items: center;
-  padding: 0px 8px;
-  margin: 5px 0px;
-}
-
-.search-form .search-button:hover {
-  background-color: #dfdfdf;
-}
-
-.search-input {
+.search-form .search-input {
   font-size: 16px;
   background: none;
   color: #5a6674;
@@ -292,12 +283,24 @@ nav .wrapper-element {
        appearance: none;
   outline: none;
 }
-
-.search-input::-webkit-search-cancel-button {
+.search-form .search-input::-webkit-search-cancel-button {
   -webkit-appearance: none;
   appearance: none;
 }
-
-.menu-item-cart {
-  margin-left: 15px;
+.search-form .search-button {
+  height: 100%;
+  /* margin-right: 5px; */
+  border: none;
+  border-radius: 5px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  background-color: white;
+  color: gray;
+  align-items: center;
+  padding: 0px 8px;
+  margin: 5px 0px;
+  position: relative;
+}
+.search-form .search-button:hover {
+  background-color: #dfdfdf;
 }/*# sourceMappingURL=navBar.css.map */

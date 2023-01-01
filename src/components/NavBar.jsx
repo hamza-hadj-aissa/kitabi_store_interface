@@ -77,20 +77,20 @@ const NavBar = () => {
 
     const getAuthButtons = () => {
         return auth ? null : (
-            <>
+            <div className="auth-buttons-container">
                 <button
-                    className="menu-item menu-item-register"
+                    className="menu-item menu-item-auth"
                     onClick={navigateToRegister}
                 >
                     Register
                 </button>
                 <button
-                    className="menu-item menu-item-login"
+                    className="menu-item menu-item-auth"
                     onClick={navigateToLogin}
                 >
                     Login
                 </button>
-            </>
+            </div>
         );
     };
 
@@ -195,7 +195,7 @@ const NavBar = () => {
                     />
                     <button className="search-button" type="submit">
                         <div className="icon-search">
-                            <MdSearch />
+                            <MdSearch size={25} />
                         </div>
                     </button>
                 </form>
@@ -235,15 +235,16 @@ const NavBar = () => {
                     </li>
                 </ul>
                 {getAuthButtons()}
-                <div className="menu-item-cart shopping-cart-icon">
-                    <MdOutlineShoppingCart
-                        className="menu-item"
-                        onClick={navigateToCart}
-                        size={25}
-                    />
-                    {cart?.length > 0 ? (
-                        <div className="cart-badge">{cart?.length}</div>
-                    ) : null}
+                <div className="navbar-icons-container">
+                    <div className="menu-item-cart shopping-cart-icon">
+                        <MdOutlineShoppingCart
+                            onClick={navigateToCart}
+                            size={25}
+                        />
+                        {cart?.length > 0 ? (
+                            <div className="cart-badge">{cart?.length}</div>
+                        ) : null}
+                    </div>
                     {auth ? auth?.role === "client" ? <Menu /> : null : null}
                 </div>
             </div>
