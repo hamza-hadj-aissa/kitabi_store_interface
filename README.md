@@ -25,7 +25,7 @@ that manages an online books store.
 Clone this project to your host by running:
 
 ```bash
-  https://github.com/hamza-hadj-aissa/kitabi_store_interface.git
+https://github.com/hamza-hadj-aissa/kitabi_store_interface.git
 ```
 On the project's directory, run this command to install dependecies:
 ```bash
