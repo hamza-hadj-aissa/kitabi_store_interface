@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MdOutlineDelete, MdOutlinePayment } from "react-icons/md";
-import { useLoaderData, useNavigate } from "react-router";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
 import Counter from "../components/Counter";
 import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
@@ -8,7 +8,7 @@ import useCart from "../hooks/useCart";
 import "../styles/scss/cart.css";
 
 function Cart() {
-    // const location = useLocation();
+    const location = useLocation();
     const axiosPrivateClient = useAxiosPrivate("client");
     let books = useLoaderData();
     const { auth } = useAuth();
@@ -142,6 +142,13 @@ function Cart() {
                           Navigate("/orders");
                       } else {
                           alert(response.data.message ?? response.statusText);
+                      }
+                  })
+                  .catch((err) => {
+                      if (err.response.status === 403) {
+                          Navigate("/auth/login", {
+                              state: { from: location },
+                          });
                       }
                   })
             : alert("Please indicate the quantity you want to order");
