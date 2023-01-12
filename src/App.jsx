@@ -44,7 +44,7 @@ const App = () => {
                     path: "",
                     index: true,
                     loader: async () => {
-                        return await axios
+                        const books = await axios
                             .get("/books")
                             .then((response) => {
                                 return response.data;
@@ -57,6 +57,20 @@ const App = () => {
                                     err.response.status
                                 );
                             });
+                        const categories = await axios
+                            .get("/books/categories")
+                            .then((response) => {
+                                return response.data.categories;
+                            })
+                            .catch((err) => {
+                                throw Response(
+                                    err.response.data.message
+                                        ? err.response.data.message
+                                        : err.response.statusText,
+                                    err.response.status
+                                );
+                            });
+                        return { books, categories };
                     },
                 },
                 {

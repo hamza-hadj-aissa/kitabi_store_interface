@@ -288,6 +288,11 @@ nav {
             touch-action: manipulation;
             transition: all 200ms;
             margin-left: 15px;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(1.1);
+            }
         }
     }
 

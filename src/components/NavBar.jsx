@@ -46,6 +46,7 @@ const NavBar = () => {
 
     const navigateToHome = () => {
         setSearchValue(null);
+        setSearch(null);
         Navigate("/");
     };
 
@@ -170,7 +171,10 @@ const NavBar = () => {
 
     const submitSearch = (e) => {
         e.preventDefault();
-        setSearchValue(search);
+        setSearchValue((prev) => ({
+            ...prev,
+            search,
+        }));
         Navigate("/");
     };
 
@@ -178,7 +182,15 @@ const NavBar = () => {
         <nav className="navbar-container">
             <div className="navbar-wrapper-left wrapper-element">
                 <h1 className="logo">
-                    <Link to="/" onClick={() => setSearchValue(null)}>
+                    <Link
+                        to="/"
+                        onClick={() =>
+                            setSearchValue((prev) => ({
+                                ...prev,
+                                search: null,
+                            }))
+                        }
+                    >
                         Kitabi
                     </Link>
                 </h1>

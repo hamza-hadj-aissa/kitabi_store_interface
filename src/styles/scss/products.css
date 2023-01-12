@@ -1,5 +1,73 @@
+div.slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 15px;
+  padding: 0px 10px;
+}
+div.slider button {
+  background-color: rgb(214, 194, 170);
+  border-radius: 8px;
+  border-width: 0;
+  box-shadow: rgba(25, 25, 25, 0.04) 0 0 1px 0, rgba(0, 0, 0, 0.1) 0 3px 4px 0;
+  color: rgb(104, 58, 1);
+  cursor: pointer;
+  padding: 10px;
+  transition: all 200ms;
+  min-height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+div.slider button:hover {
+  background-color: rgb(204, 185, 163);
+  transform: scale(1.05);
+}
+div.slider button .icon {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+}
+div.slider ul.categories-slider {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
+  min-height: 30px;
+  list-style-type: none;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+div.slider ul.categories-slider::-webkit-scrollbar {
+  display: none;
+}
+div.slider ul.categories-slider li {
+  font-weight: bold;
+  padding: 10px;
+  border: 1px solid rgba(128, 128, 128, 0.5019607843);
+  border-radius: 8px;
+  transition: all 200ms;
+  text-align: center;
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+}
+div.slider ul.categories-slider li.selected {
+  background-color: rgba(204, 185, 163, 0.5);
+}
+div.slider ul.categories-slider li:hover {
+  background-color: rgba(204, 185, 163, 0.5);
+  cursor: pointer;
+  transform: scale(1.08);
+}
+
 .products-container {
-  padding: 20px 20px;
+  padding: 20px;
   margin: 20px 30px;
   display: flex;
   justify-content: start;

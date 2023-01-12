@@ -249,6 +249,10 @@ nav .wrapper-element {
   transition: all 200ms;
   margin-left: 15px;
 }
+.navbar-container .auth-buttons-container button:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
 .navbar-container .menu-item:hover {
   opacity: 0.5;
   cursor: pointer;
