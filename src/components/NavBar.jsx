@@ -21,7 +21,7 @@ import "../styles/scss/navBar.css";
 const NavBar = () => {
     const refresh = useRefreshToken("client");
     const { setSearchValue } = useSearch();
-    const [search, setSearch] = useState(null);
+    const [search, setSearch] = useState();
     const searchRef = useRef();
     const { auth, setAuth } = useAuth();
     const { cart } = useCart();
@@ -45,9 +45,10 @@ const NavBar = () => {
     };
 
     const navigateToHome = () => {
+        searchRef.current.value = "";
         setSearchValue(null);
         setSearch(null);
-        Navigate("/");
+        Navigate("/", { replace: true });
     };
 
     const navigateToProfile = () => {
@@ -76,6 +77,14 @@ const NavBar = () => {
             });
     };
 
+    const submitSearch = (e) => {
+        e.preventDefault();
+        setSearchValue((prev) => ({
+            ...prev,
+            search,
+        }));
+        Navigate("/", { replace: true });
+    };
     const getAuthButtons = () => {
         return auth ? null : (
             <div className="auth-buttons-container">
@@ -169,30 +178,11 @@ const NavBar = () => {
         );
     };
 
-    const submitSearch = (e) => {
-        e.preventDefault();
-        setSearchValue((prev) => ({
-            ...prev,
-            search,
-        }));
-        Navigate("/");
-    };
-
     return (
         <nav className="navbar-container">
             <div className="navbar-wrapper-left wrapper-element">
-                <h1 className="logo">
-                    <Link
-                        to="/"
-                        onClick={() =>
-                            setSearchValue((prev) => ({
-                                ...prev,
-                                search: null,
-                            }))
-                        }
-                    >
-                        Kitabi
-                    </Link>
+                <h1 className="logo" onClick={navigateToHome}>
+                    Kitabi
                 </h1>
             </div>
             <div className="navbar-wrapper-center wrapper-element">
@@ -202,7 +192,7 @@ const NavBar = () => {
                         placeholder="Search a book, author, category"
                         className="search-input"
                         ref={searchRef}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => setSearch(searchRef.current.value)}
                         value={search}
                     />
                     <button className="search-button" type="submit">

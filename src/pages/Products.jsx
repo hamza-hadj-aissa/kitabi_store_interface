@@ -23,7 +23,6 @@ function Products() {
                 }`
             )
             .then((response) => {
-                console.log(response.data);
                 if (response.data.success) {
                     setbooksListState(response.data.books);
                 } else {

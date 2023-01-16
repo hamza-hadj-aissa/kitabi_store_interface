@@ -27,9 +27,7 @@ const Profile = () => {
                 phone_number: phoneNumberState,
             })
             .then((response) => {
-                console.log("Updated successfully");
                 if (response.data.success) {
-                    console.log("Updated successfully");
                 } else {
                     setErrMsg(response.data.message);
                 }

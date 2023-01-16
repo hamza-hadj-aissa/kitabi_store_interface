@@ -38,9 +38,7 @@ const AdminProfile = () => {
                     newConfirmPassword: confirmNewPasswordState,
                 })
                 .then((response) => {
-                    console.log(response.data);
                     if (response.data.success) {
-                        console.log("password updated successfully");
                         Navigate("/admin/dashboard", { replace: true });
                     } else {
                         if (
@@ -56,7 +54,6 @@ const AdminProfile = () => {
                     }
                 })
                 .catch((err) => {
-                    console.log(err.response.data);
                     setErrMsg(
                         err.response.data.message ?? err.response.statusText
                     );

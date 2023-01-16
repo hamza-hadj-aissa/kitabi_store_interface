@@ -33,14 +33,15 @@ nav {
     flex: 1.5;
 }
 
-.navbar-wrapper-left h1 * {
+.navbar-wrapper-left>h1 {
     text-decoration: none;
     color: white;
-    font-size: larger;
-}
+    font-size: xx-large;
 
-.navbar-wrapper-left h1 *:hover {
-    opacity: 0.5;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.5;
+    }
 }
 
 .navbar-wrapper-right {

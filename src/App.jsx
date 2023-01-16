@@ -191,11 +191,9 @@ const App = () => {
                         return await axiosPrivateClient
                             .get("/orders")
                             .then((response) => {
-                                console.log(response.data);
                                 return response.data?.orders;
                             })
                             .catch((err) => {
-                                console.log(err.response.data);
                                 if (
                                     err.response.status === 403 ||
                                     err.response.status === 401

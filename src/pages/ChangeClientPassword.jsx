@@ -36,7 +36,6 @@ const ChangeCLientPassword = () => {
                     newConfirmPassword: confirmNewPasswordState,
                 })
                 .then((response) => {
-                    console.log(response.data);
                     if (response.data.success) {
                         Navigate("/", { replace: true });
                     } else {
@@ -53,7 +52,6 @@ const ChangeCLientPassword = () => {
                     }
                 })
                 .catch((err) => {
-                    console.log(err.response.data);
                     setErrMsg(
                         err.response.data.message ?? err.response.statusText
                     );

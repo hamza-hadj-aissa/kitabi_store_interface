@@ -28,7 +28,6 @@ const ResendVerificationEmail = () => {
                     email: emailState,
                 })
                 .then((response) => {
-                    console.log(response.data);
                     if (response.data.success) {
                         setSuccessMsg(
                             "Email sent successfully. Please check your inbox"
@@ -36,7 +35,6 @@ const ResendVerificationEmail = () => {
                     }
                 })
                 .catch((err) => {
-                    console.log(err.response.data);
                     setErrMsg(
                         err.response.data.message ?? err.response.statusText
                     );
