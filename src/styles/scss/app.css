@@ -23,6 +23,7 @@ button {
 .popup {
   z-index: 1;
   align-self: center;
+  justify-self: center;
   position: fixed;
   top: 10%;
   padding: 20px 40px;

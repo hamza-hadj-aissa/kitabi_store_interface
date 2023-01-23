@@ -8,7 +8,7 @@ const AdminLayout = () => {
     const { auth } = useAuth();
 
     return (
-        <>
+        <div className="router-provider-container">
             <AdminNavBar />
             {auth ? (
                 auth?.role === "admin" ? (
@@ -19,7 +19,7 @@ const AdminLayout = () => {
             ) : (
                 <AdminLogin />
             )}
-        </>
+        </div>
     );
 };
 
