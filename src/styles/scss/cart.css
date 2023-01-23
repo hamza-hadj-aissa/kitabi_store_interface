@@ -69,6 +69,10 @@
 .cart-container tbody tr .books-cart-left .books-title-author p {
   align-self: end;
 }
+.cart-container tbody tr .books-cart-left .books-title-author p.out-of-stock {
+  color: red;
+  font-weight: 600;
+}
 .cart-container tbody tr .books-cart-left button {
   display: flex;
   justify-content: center;

@@ -5,12 +5,15 @@ import {
     MdRemoveShoppingCart,
 } from "react-icons/md";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
+import PopUpError from "../components/PopUpError";
 import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useCart from "../hooks/useCart";
 import "../styles/scss/productDetails.css";
 
 function ProductDetails() {
+    const [popupError, setPopupError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
     const loaction = useLocation();
     const axiosPrivateClient = useAxiosPrivate();
     const { auth } = useAuth;
@@ -71,17 +74,12 @@ function ProductDetails() {
                 if (response.data.success) {
                     Navigate("/orders");
                 } else {
-                    throw Response(
-                        response.data.message ?? response.statusText,
-                        response.status
-                    );
+                    setErrorMessage(response.data.message);
+                    setPopupError(true);
                 }
             })
             .catch((err) => {
-                if (
-                    err.response.status === 403 ||
-                    err.response.status === 401
-                ) {
+                if (err.response.status === 403) {
                     Navigate("/auth/login", {
                         state: { from: loaction },
                         replace: true,
@@ -96,51 +94,58 @@ function ProductDetails() {
     };
 
     return (
-        <div className="product-details-main-container">
-            <img
-                src={`http://localhost:8080/images/${book?.image}`}
-                className="image-container"
-                alt="bookk"
+        <>
+            <PopUpError
+                popupError={popupError}
+                setPopupError={setPopupError}
+                message={errorMessage}
             />
-            <div className="book-info-container">
-                <div className="book-details">
-                    <h1 className="book-title">{book?.title}</h1>
-                    <h3 className="book-title">{book?.author}</h3>
-                    <p className="book-description-container">
-                        {book?.description}
-                    </p>
-                </div>
-                <div className="book-category-pages-container">
-                    <div>Category: {category.name}</div>
-                    <div>Number of pages: {book?.pages_number}</div>
-                </div>
-                {getBookPrice()}
-                <div className="buttons-container">
-                    <button
-                        className="btn btn-add-to-cart"
-                        onClick={async () =>
-                            bookIsInCart
-                                ? await _removeFromCart()
-                                : await _addToCart()
-                        }
-                    >
-                        {getCartButton()}
-                    </button>
-                    <button
-                        className={`btn btn-buy-book${
-                            "-" + !(auth?.role === "client" || !auth)
-                                ? "disabled"
-                                : null
-                        }`}
-                        onClick={buyBook}
-                        disabled={!(auth?.role === "client" || !auth)}
-                    >
-                        <div className="button-text">Buy now</div>
-                        <MdOutlinePayment size={25} />
-                    </button>
+            <div className="product-details-main-container">
+                <img
+                    src={`http://localhost:8080/images/${book?.image}`}
+                    className="image-container"
+                    alt="bookk"
+                />
+                <div className="book-info-container">
+                    <div className="book-details">
+                        <h1 className="book-title">{book?.title}</h1>
+                        <h3 className="book-title">{book?.author}</h3>
+                        <p className="book-description-container">
+                            {book?.description}
+                        </p>
+                    </div>
+                    <div className="book-category-pages-container">
+                        <div>Category: {category.name}</div>
+                        <div>Number of pages: {book?.pages_number}</div>
+                    </div>
+                    {getBookPrice()}
+                    <div className="buttons-container">
+                        <button
+                            className="btn btn-add-to-cart"
+                            onClick={async () =>
+                                bookIsInCart
+                                    ? await _removeFromCart()
+                                    : await _addToCart()
+                            }
+                        >
+                            {getCartButton()}
+                        </button>
+                        <button
+                            className={`btn btn-buy-book${
+                                "-" + !(auth?.role === "client" || !auth)
+                                    ? "disabled"
+                                    : null
+                            }`}
+                            onClick={buyBook}
+                            disabled={!(auth?.role === "client" || !auth)}
+                        >
+                            <div className="button-text">Buy now</div>
+                            <MdOutlinePayment size={25} />
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

@@ -18,4 +18,80 @@ button {
 
 .middle {
   min-height: 90vh;
+}
+
+.popup {
+  z-index: 1;
+  align-self: center;
+  position: fixed;
+  top: 10%;
+  padding: 20px 40px;
+  border-radius: 5px;
+  background-color: rgba(189, 21, 21, 0.8941176471);
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  min-width: 400px;
+  color: white;
+  -webkit-animation: drop 0.5s ease forwards;
+          animation: drop 0.5s ease forwards;
+}
+@-webkit-keyframes drop {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes drop {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.popup-inactive {
+  display: none;
+}
+.popup-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+.popup-inner h3 {
+  cursor: default;
+}
+.popup-inner .icon {
+  position: absolute;
+  right: 0%;
+  top: 0%;
+  border-radius: 5px;
+  padding: 5px;
+}
+.popup-inner .icon:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+.popup-inner button {
+  padding: 5px 10px;
+  border: 1px solid white;
+  border-radius: 5px;
+}
+.popup-inner button:hover {
+  opacity: 0.5;
+  cursor: pointer;
 }/*# sourceMappingURL=app.css.map */
