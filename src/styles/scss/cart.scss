@@ -79,6 +79,11 @@
 
                     p {
                         align-self: end;
+
+                        &.out-of-stock {
+                            color: red;
+                            font-weight: 600;
+                        }
                     }
                 }
 

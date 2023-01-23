@@ -2,12 +2,15 @@ import { useState } from "react";
 import { MdOutlineDelete, MdOutlinePayment } from "react-icons/md";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
 import Counter from "../components/Counter";
+import PopUpError from "../components/PopUpError";
 import useAuth from "../hooks/useAuth";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useCart from "../hooks/useCart";
 import "../styles/scss/cart.css";
 
 function Cart() {
+    const [popupError, setPopupError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
     const location = useLocation();
     const axiosPrivateClient = useAxiosPrivate("client");
     let books = useLoaderData();
@@ -19,10 +22,15 @@ function Cart() {
         books.map((book) => {
             return {
                 id: book?.id,
-                value: 1,
+                value: book?.quantity === 0 ? 0 : 1,
             };
         })
     );
+
+    const openPopup = (message) => {
+        setErrorMessage(message);
+        setPopupError(true);
+    };
 
     const BooksList = () => {
         if (booksState.length) {
@@ -59,7 +67,11 @@ function Cart() {
                                 <h2>{book.title}</h2>
                                 <h3>{book.author}</h3>
                             </div>
-                            <p>{book.quantity} remainings in stock</p>
+                            {book.quantity === 0 ? (
+                                <p className="out-of-stock">Out of stock</p>
+                            ) : (
+                                <p>{`${book?.quantity} remainings in stock`}</p>
+                            )}
                         </div>
                     </div>
                 </td>
@@ -141,7 +153,7 @@ function Cart() {
                       if (response.data.success) {
                           Navigate("/orders");
                       } else {
-                          alert(response.data.message ?? response.statusText);
+                          openPopup(response.data.message);
                       }
                   })
                   .catch((err) => {
@@ -151,44 +163,51 @@ function Cart() {
                           });
                       }
                   })
-            : alert("Please indicate the quantity you want to order");
+            : openPopup("Please indicate the quantity you want to order");
     };
 
     return (
-        <div className="cart-container middle">
-            <h1>My Cart</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <td>books</td>
-                        <td>Quantity</td>
-                        <td className="price">Unit price</td>
-                        <td className="price">Total price</td>
-                    </tr>
-                </thead>
-            </table>
-            <tbody>
-                <BooksList />
-            </tbody>
-            <div
-                className="cart-bottom"
-                style={{ display: booksState.length ? null : "none" }}
-            >
-                <div className="total-price">{getTotalPrice()} DA</div>
-                <button
-                    className={`btn btn-buy-book${
-                        "-" + !(auth?.role === "client" || !auth)
-                            ? "disabled"
-                            : null
-                    }`}
-                    onClick={buyBooks}
-                    disabled={!(auth?.role === "client" || !auth)}
+        <>
+            <PopUpError
+                popupError={popupError}
+                setPopupError={setPopupError}
+                message={errorMessage}
+            />
+            <div className="cart-container middle">
+                <h1>My Cart</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>books</td>
+                            <td>Quantity</td>
+                            <td className="price">Unit price</td>
+                            <td className="price">Total price</td>
+                        </tr>
+                    </thead>
+                </table>
+                <tbody>
+                    <BooksList />
+                </tbody>
+                <div
+                    className="cart-bottom"
+                    style={{ display: booksState.length ? null : "none" }}
                 >
-                    <div className="button-text">Buy now</div>
-                    <MdOutlinePayment size={25} />
-                </button>
+                    <div className="total-price">{getTotalPrice()} DA</div>
+                    <button
+                        className={`btn btn-buy-book${
+                            "-" + !(auth?.role === "client" || !auth)
+                                ? "disabled"
+                                : null
+                        }`}
+                        onClick={buyBooks}
+                        disabled={!(auth?.role === "client" || !auth)}
+                    >
+                        <div className="button-text">Buy now</div>
+                        <MdOutlinePayment size={25} />
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 
