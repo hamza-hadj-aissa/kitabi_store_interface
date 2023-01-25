@@ -25,11 +25,17 @@
                 flex: 1;
                 text-align: center;
                 font-weight: bold;
+
+                &.half-flex {
+                    flex: 0.5;
+                }
+
+                &.small-flex {
+                    flex: 0.3;
+                }
             }
 
-            .half-flex {
-                flex: 0.5;
-            }
+
         }
     }
 
@@ -54,11 +60,54 @@
                     padding: 0;
                     text-align: center;
                 }
+
+                &.half-flex {
+                    flex: 0.5;
+                }
+
+                &.small-flex {
+                    flex: 0.3;
+
+                    button {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        align-self: center;
+                        background-color: rgb(222, 14, 14);
+                        border-radius: 5px;
+                        border-width: 0;
+                        box-shadow: rgba(25, 25, 25, 0.04) 0 0 1px 0, rgba(0, 0, 0, 0.1) 0 3px 4px 0;
+                        color: white;
+                        height: 40px;
+                        width: min-content;
+                        padding: 0 15px;
+                        font-size: 15px;
+                        transition: all 200ms;
+                        position: relative;
+
+                        .icon {
+                            position: absolute;
+                        }
+
+                        &:hover {
+                            cursor: pointer;
+                            background-color: rgb(219, 114, 114);
+                            transform: scale(1.05);
+                        }
+
+                        &:disabled {
+                            cursor: default;
+                            background-color: rgb(244, 185, 185);
+
+                            &:hover {
+                                transform: scale(1);
+                            }
+                        }
+                    }
+                }
             }
 
-            .half-flex {
-                flex: 0.5;
-            }
+
         }
 
         select {

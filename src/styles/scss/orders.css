@@ -24,8 +24,11 @@
   text-align: center;
   font-weight: bold;
 }
-.orders-container thead tr .half-flex {
+.orders-container thead tr td.half-flex {
   flex: 0.5;
+}
+.orders-container thead tr td.small-flex {
+  flex: 0.3;
 }
 .orders-container tbody tr {
   display: flex;
@@ -46,8 +49,45 @@
   padding: 0;
   text-align: center;
 }
-.orders-container tbody tr .half-flex {
+.orders-container tbody tr td.half-flex {
   flex: 0.5;
+}
+.orders-container tbody tr td.small-flex {
+  flex: 0.3;
+}
+.orders-container tbody tr td.small-flex button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  background-color: rgb(222, 14, 14);
+  border-radius: 5px;
+  border-width: 0;
+  box-shadow: rgba(25, 25, 25, 0.04) 0 0 1px 0, rgba(0, 0, 0, 0.1) 0 3px 4px 0;
+  color: white;
+  height: 40px;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  padding: 0 15px;
+  font-size: 15px;
+  transition: all 200ms;
+  position: relative;
+}
+.orders-container tbody tr td.small-flex button .icon {
+  position: absolute;
+}
+.orders-container tbody tr td.small-flex button:hover {
+  cursor: pointer;
+  background-color: rgb(219, 114, 114);
+  transform: scale(1.05);
+}
+.orders-container tbody tr td.small-flex button:disabled {
+  cursor: default;
+  background-color: rgb(244, 185, 185);
+}
+.orders-container tbody tr td.small-flex button:disabled:hover {
+  transform: scale(1);
 }
 .orders-container tbody select {
   background-color: transparent;

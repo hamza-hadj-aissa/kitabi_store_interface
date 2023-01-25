@@ -1,12 +1,15 @@
 import React from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 const PopUpError = ({ popupError, setPopupError, message }) => {
+    var [timeout, setTimeoutState] = useState();
     useEffect(() => {
         if (popupError) {
-            var timeout = setTimeout(() => {
+            var localTimout = setTimeout(() => {
                 setPopupError(false);
             }, 3500);
+            setTimeoutState(localTimout);
         } else {
             clearTimeout(timeout);
         }

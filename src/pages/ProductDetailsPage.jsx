@@ -65,6 +65,11 @@ function ProductDetails() {
         await removeFromCart(book.id).then(() => setBookIsInCart(false));
     };
 
+    const openPopup = (message) => {
+        setErrorMessage(message);
+        setPopupError(true);
+    };
+
     const buyBook = async () => {
         await axiosPrivateClient
             .post("/orders/buy", {
@@ -74,8 +79,7 @@ function ProductDetails() {
                 if (response.data.success) {
                     Navigate("/orders");
                 } else {
-                    setErrorMessage(response.data.message);
-                    setPopupError(true);
+                    openPopup(response.data.message);
                 }
             })
             .catch((err) => {
