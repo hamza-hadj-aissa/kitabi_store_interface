@@ -1,22 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+import { IoIosArrowDown } from "react-icons/io";
 import {
     MdOutlineAdminPanelSettings,
-    MdOutlineClose,
-    MdOutlineLocalShipping,
-    MdOutlineLogout,
-    MdOutlineMenu,
     MdOutlinePersonOutline,
     MdOutlineShoppingCart,
     MdSearch,
 } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useCart from "../hooks/useCart";
 import useRefreshToken from "../hooks/useRefreshToken";
 import useSearch from "../hooks/useSearch";
 import "../styles/scss/navBar.css";
+import Menu from "./Menu";
 
 const NavBar = () => {
     const refresh = useRefreshToken("client");
@@ -25,15 +21,10 @@ const NavBar = () => {
     const searchRef = useRef();
     const { auth, setAuth } = useAuth();
     const { cart } = useCart();
-    const [menuOpen, setMenuOpen] = useState(false);
     const Navigate = useNavigate();
 
     const navigateToCart = () => {
         Navigate("/cart");
-    };
-
-    const navigateToOrders = () => {
-        Navigate("/orders");
     };
 
     const navigateToRegister = () => {
@@ -49,32 +40,6 @@ const NavBar = () => {
         setSearchValue(null);
         setSearch(null);
         Navigate("/", { replace: true });
-    };
-
-    const navigateToProfile = () => {
-        Navigate("/profile");
-    };
-
-    const logout = async () => {
-        await axios
-            .delete("/auth/logout")
-            .then((response) => {
-                if (response.data.success) {
-                    // setHasLoggedOut(true);
-                    // setIsLoading(false);
-                    // Navigate("/", { replace: true });
-                    setAuth(null);
-                    window.location = "http://localhost:3000/";
-                }
-            })
-            .catch((err) => {
-                throw Response(
-                    err.response.data.message
-                        ? err.response.data.message
-                        : err.response.statusText,
-                    err.response.status
-                );
-            });
     };
 
     const submitSearch = (e) => {
@@ -118,65 +83,6 @@ const NavBar = () => {
         }
         return () => (isMounted = false);
     }, []);
-
-    const Menu = () => {
-        const wrapperRef = useRef(null);
-        function useOutsideAlerter(ref) {
-            useEffect(() => {
-                function handleClickOutside(event) {
-                    if (ref.current && !ref.current.contains(event.target)) {
-                        setMenuOpen(false);
-                    }
-                }
-                if (menuOpen) {
-                    document.addEventListener("mousedown", handleClickOutside);
-                    return () => {
-                        document.removeEventListener(
-                            "mousedown",
-                            handleClickOutside
-                        );
-                    };
-                }
-            }, [ref]);
-        }
-        useOutsideAlerter(wrapperRef);
-        return (
-            <div className="dropdown-menu-container" ref={wrapperRef}>
-                <div onClick={() => setMenuOpen(!menuOpen)}>
-                    {menuOpen ? (
-                        <MdOutlineClose
-                            size={25}
-                            className="menu-item menu-item-toggleMenu"
-                        />
-                    ) : (
-                        <MdOutlineMenu
-                            size={25}
-                            className="menu-item menu-item-toggleMenu"
-                        />
-                    )}
-                </div>
-                <div
-                    className={`dropdown-menu ${
-                        menuOpen ? "active" : "inactive"
-                    }`}
-                >
-                    <ul onClick={() => (menuOpen ? setMenuOpen(false) : null)}>
-                        <li onClick={navigateToProfile}>
-                            <MdOutlinePersonOutline size={25} /> Profile
-                        </li>
-                        {auth?.role === "client" ? (
-                            <li onClick={navigateToOrders}>
-                                <MdOutlineLocalShipping size={25} /> My orders
-                            </li>
-                        ) : null}
-                        <li onClick={async () => await logout()}>
-                            <MdOutlineLogout size={25} /> Logout
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        );
-    };
 
     return (
         <nav className="navbar-container">
@@ -247,7 +153,7 @@ const NavBar = () => {
                             <div className="cart-badge">{cart?.length}</div>
                         ) : null}
                     </div>
-                    {auth ? auth?.role === "client" ? <Menu /> : null : null}
+                    {auth ? <Menu auth={auth} setAuth={setAuth} /> : null}
                 </div>
             </div>
         </nav>
