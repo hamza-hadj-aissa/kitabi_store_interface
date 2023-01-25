@@ -82,8 +82,10 @@ button {
   top: 0%;
   border-radius: 5px;
   padding: 5px;
+  transition: all 200ms;
 }
 .popup-inner .icon:hover {
+  transform: scale(1.05);
   opacity: 0.5;
   cursor: pointer;
 }
@@ -91,8 +93,10 @@ button {
   padding: 5px 10px;
   border: 1px solid white;
   border-radius: 5px;
+  transition: all 200ms;
 }
 .popup-inner button:hover {
+  transform: scale(1.05);
   opacity: 0.5;
   cursor: pointer;
 }/*# sourceMappingURL=app.css.map */
