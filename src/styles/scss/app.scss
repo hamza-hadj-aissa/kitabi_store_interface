@@ -4,97 +4,98 @@
 /* Hide scrollbar for IE, Edge and Firefox */
 body {
     font-family: "Montserrat", sans-serif;
-}
+    background-color: rgb(248, 247, 246);
 
-button {
-    font-family: "Montserrat", sans-serif;
-    font-weight: 600;
-}
-
-.router-provider-container {
-    display: flex;
-    justify-content: end;
-    flex-direction: column;
-    flex-wrap: nowrap;
-}
-
-.middle {
-    min-height: 90vh;
-}
-
-.popup {
-    z-index: 1;
-    align-self: center;
-    justify-self: center;
-    position: fixed;
-    top: 10%;
-    padding: 20px 40px;
-    border-radius: 5px;
-    background-color: #bd1515e4;
-    height: max-content;
-    width: max-content;
-    min-width: 400px;
-    color: white;
-
-    @keyframes drop {
-        0% {
-            opacity: 0;
-        }
-
-        50% {
-            opacity: 0.5;
-            transform: translateY(15px);
-        }
-
-        100% {
-            opacity: 1;
-        }
+    button {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
     }
 
-    animation: drop 0.5s ease forwards;
-
-
-
-    &-inactive {
-        display: none;
-    }
-
-    &-inner {
+    .router-provider-container {
         display: flex;
+        justify-content: end;
         flex-direction: column;
-        align-items: center;
-        gap: 15px;
+        flex-wrap: nowrap;
+    }
 
-        h3 {
-            cursor: default;
-        }
+    .middle {
+        min-height: 90vh;
+    }
 
-        .icon {
-            position: absolute;
-            right: 0%;
-            top: 0%;
-            border-radius: 5px;
-            padding: 5px;
-            transition: all 200ms;
+    .popup {
+        z-index: 1;
+        align-self: center;
+        justify-self: center;
+        position: fixed;
+        top: 10%;
+        padding: 20px 40px;
+        border-radius: 5px;
+        background-color: #bd1515e4;
+        height: max-content;
+        width: max-content;
+        min-width: 400px;
+        color: white;
 
+        @keyframes drop {
+            0% {
+                opacity: 0;
+            }
 
-            &:hover {
-                transform: scale(1.05);
+            50% {
                 opacity: 0.5;
-                cursor: pointer;
+                transform: translateY(15px);
+            }
+
+            100% {
+                opacity: 1;
             }
         }
 
-        button {
-            padding: 5px 10px;
-            border: 1px solid white;
-            border-radius: 5px;
-            transition: all 200ms;
+        animation: drop 0.5s ease forwards;
 
-            &:hover {
-                transform: scale(1.05);
-                opacity: 0.5;
-                cursor: pointer;
+
+
+        &-inactive {
+            display: none;
+        }
+
+        &-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+
+            h3 {
+                cursor: default;
+            }
+
+            .icon {
+                position: absolute;
+                right: 0%;
+                top: 0%;
+                border-radius: 5px;
+                padding: 5px;
+                transition: all 200ms;
+
+
+                &:hover {
+                    transform: scale(1.05);
+                    opacity: 0.5;
+                    cursor: pointer;
+                }
+            }
+
+            button {
+                padding: 5px 10px;
+                border: 1px solid white;
+                border-radius: 5px;
+                transition: all 200ms;
+
+                &:hover {
+                    transform: scale(1.05);
+                    opacity: 0.5;
+                    cursor: pointer;
+                }
             }
         }
     }

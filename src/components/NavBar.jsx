@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import {
     MdOutlineAdminPanelSettings,
+    MdOutlineClose,
     MdOutlinePersonOutline,
     MdOutlineShoppingCart,
     MdSearch,
@@ -35,10 +36,14 @@ const NavBar = () => {
         Navigate("/auth/login");
     };
 
-    const navigateToHome = () => {
+    const clearSearch = () => {
         searchRef.current.value = "";
         setSearchValue(null);
         setSearch(null);
+    };
+
+    const navigateToHome = () => {
+        clearSearch();
         Navigate("/", { replace: true });
     };
 
@@ -86,12 +91,12 @@ const NavBar = () => {
 
     return (
         <nav className="navbar-container">
-            <div className="navbar-wrapper-left wrapper-element">
+            <div className="navbar-wrapper-left navbar-wrapper">
                 <h1 className="logo" onClick={navigateToHome}>
                     Kitabi
                 </h1>
             </div>
-            <div className="navbar-wrapper-center wrapper-element">
+            <div className="navbar-wrapper-center navbar-wrapper">
                 <form className="search-form" onSubmit={submitSearch}>
                     <input
                         type="search"
@@ -101,14 +106,21 @@ const NavBar = () => {
                         onChange={(e) => setSearch(searchRef.current.value)}
                         value={search}
                     />
+                    {!searchRef.current?.value ? null : (
+                        <button
+                            className="search-button search-button-clear"
+                            type="button"
+                            onClick={clearSearch}
+                        >
+                            <MdOutlineClose size={25} className="search-icon" />
+                        </button>
+                    )}
                     <button className="search-button" type="submit">
-                        <div className="icon-search">
-                            <MdSearch size={25} />
-                        </div>
+                        <MdSearch size={25} className="search-icon" />
                     </button>
                 </form>
             </div>
-            <div className="navbar-wrapper-right wrapper-element">
+            <div className="navbar-wrapper-right navbar-wrapper">
                 <ul>
                     <li onClick={navigateToHome}>Home</li>
                     <li>About</li>

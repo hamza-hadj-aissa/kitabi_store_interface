@@ -134,12 +134,12 @@ function Cart() {
 
     const buyBooks = async () => {
         let booksToBuy = [];
-        booksState.map((book) => {
-            cartCounters.map((counter) => {
+        booksState.forEach((book) => {
+            cartCounters.forEach((counter) => {
                 if (counter.id === book.id && counter.value > 0) {
                     booksToBuy.push({
                         id: book.id,
-                        quantity: counter.value,
+                        quantity: counter?.value,
                     });
                 }
             });
