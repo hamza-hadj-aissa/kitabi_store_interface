@@ -181,9 +181,8 @@
                         margin: 0;
                         padding: 20px;
 
-                        svg {
-                            margin: 0;
-                            padding: 0;
+                        .icon {
+                            position: absolute;
                         }
                     }
 

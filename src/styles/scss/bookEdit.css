@@ -170,9 +170,8 @@
   background-color: rgb(204, 185, 163);
   transform: scale(1.05);
 }
-.edit-book-container form > div .right-side .image-info button svg {
-  margin: 0;
-  padding: 0;
+.edit-book-container form > div .right-side .image-info button .icon {
+  position: absolute;
 }
 .edit-book-container form > div .right-side .image-info img {
   z-index: 0;
