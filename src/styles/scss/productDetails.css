@@ -39,6 +39,17 @@
 .product-details-main-container .book-info-container .book-category-pages-container > * {
   text-align: start;
 }
+.product-details-main-container .book-info-container .book-price-container {
+  text-align: end;
+  font-size: 35px;
+  margin-left: 20px;
+}
+.product-details-main-container .book-info-container .book-price-container > p {
+  margin: 10px;
+}
+.product-details-main-container .book-info-container .book-price-container .before-discount {
+  text-decoration: line-through;
+}
 .product-details-main-container .book-info-container .buttons-container {
   margin: 20px 0px;
   display: flex;
@@ -54,95 +65,6 @@
   margin: 10px 0px;
   margin-left: 15px;
   gap: 10px;
-}
-.product-details-main-container .book-info-container .buttons-container .button-text {
-  font-size: 20px;
-}
-.product-details-main-container .book-info-container .buttons-container .add-to-cart-icon,
-.product-details-main-container .book-info-container .buttons-container .payement-icon {
-  font-size: 22px;
-}
-.product-details-main-container .book-info-container .book-price-container {
-  text-align: end;
-  font-size: 35px;
-  margin-left: 20px;
-}
-.product-details-main-container .book-info-container .book-price-container > p {
-  margin: 10px;
-}
-.product-details-main-container .book-info-container .before-discount {
-  text-decoration: line-through;
-}
-
-.product-details-main-container > .image-container {
-  margin-right: 30px;
-  height: 400px;
-  width: 280px;
-}
-
-.product-details-main-container > .image-container > img {
-  aspect-ratio: 2/3;
-  height: 80%;
-  width: 80%;
-}
-
-.book-info-container {
-  display: block;
-  flex: 3;
-}
-
-.book-details {
-  text-align: start;
-}
-
-.book-title {
-  font-weight: bolder;
-}
-
-.book-description-container {
-  margin: 20px 0px;
-  text-align: justify;
-}
-
-.buttons-container {
-  margin: 20px 0px;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  flex-wrap: wrap;
-  /* flex-wrap: wrap; */
-}
-
-.book-category-pages-container {
-  margin-bottom: 20px;
-}
-
-.book-category-pages-container > * {
-  text-align: start;
-}
-
-.book-price-container {
-  text-align: end;
-  font-size: 35px;
-  margin-left: 20px;
-}
-
-.book-price-container > p {
-  margin: 10px;
-}
-
-.before-discount {
-  text-decoration: line-through;
-}
-
-.btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0px;
-}
-
-.product-details-main-container button {
   margin-left: 15px;
   background-color: rgb(214, 194, 170);
   border-radius: 5px;
@@ -154,13 +76,20 @@
   transition: all 200ms;
   opacity: 0.5;
 }
-.product-details-main-container button:enabled {
+.product-details-main-container .book-info-container .buttons-container button:enabled {
   cursor: pointer;
   opacity: 1;
 }
-.product-details-main-container button:enabled:hover {
+.product-details-main-container .book-info-container .buttons-container button:enabled:hover {
   background-color: rgb(204, 185, 163);
   transform: scale(1.05);
+}
+.product-details-main-container .book-info-container .buttons-container .button-text {
+  font-size: 20px;
+}
+.product-details-main-container .book-info-container .buttons-container .add-to-cart-icon,
+.product-details-main-container .book-info-container .buttons-container .payement-icon {
+  font-size: 22px;
 }
 
 .counter-container,
