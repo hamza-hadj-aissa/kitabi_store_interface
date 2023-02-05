@@ -16,7 +16,7 @@ function ProductDetails() {
     const [errorMessage, setErrorMessage] = useState(null);
     const loaction = useLocation();
     const axiosPrivateClient = useAxiosPrivate();
-    const { auth } = useAuth;
+    const { auth } = useAuth();
     const Navigate = useNavigate();
     let { book, bookInCart, category } = useLoaderData();
     const { addToCart, removeFromCart } = useCart();
